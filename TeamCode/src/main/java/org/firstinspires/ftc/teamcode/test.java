@@ -179,7 +179,7 @@ public class test extends LinearOpMode {
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         waitForStart();
-
+        Log.i(TAG, "*************Starting Autonomous TEST**************************");
         if (opModeIsActive()) {
             if (tfod != null) {
                 tfod.activate();
@@ -188,18 +188,8 @@ public class test extends LinearOpMode {
         //Begin step 1
         //Drop from lander
 if (test) {
-    robot.slide(250);//moves litle bit up
-    robot.unlatch();//
-    sleep(800); //This sleep allows the robot to drop down
-    robot.slide(50);
-    telemetry.addData("Landed", "");
-    telemetry.update();
-    telemetry.addData("Drop", "complete");
-    telemetry.update();
-    sleep(3500); //Prevents robot from starting sensing early
-    robot.hold_slide();
-    sleep(300);// Lets the servo hold
-
+    robot.unlatchUsingEncoderPosition(0.75);
+ //   robot.unlatchUsingEncoderSpeed(0.75);
     //Move out of the latch
     robot.moveL(100);
     robot.moveF(320);
@@ -292,6 +282,7 @@ if (test) {
         if (tfod != null) {
             tfod.shutdown();
         }
+        Log.i(TAG, "================== Autonomous TEST Finished =======================");
     }
 
     /**

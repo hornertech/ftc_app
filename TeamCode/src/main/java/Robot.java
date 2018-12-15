@@ -93,6 +93,76 @@ public class Robot extends java.lang.Thread {
         return (encoder_ticks);
     }
 
+    // Come down using encoder moveToPosition and come out of latch
+    public void unlatchUsingEncoderPosition (double power){
+        telemetry.addData("Direction", "Down");
+        telemetry.update();
+        Log.i(TAG, "Enter Function: unlatchUsingEncoderPosition");
+        Log.i(TAG, "Starting decent at : " + System.currentTimeMillis());
+
+        // Reset encoder
+        motor_5.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //Trial and Error
+        int ticks = 10 * TICKS_PER_ROTATION;
+        telemetry.addData("Actual Ticks needed", ticks);
+        telemetry.update();
+
+        // Set the target position and power and run to position
+        motor_5.setTargetPosition(ticks);
+        motor_5.setPower(power);
+        motor_5.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        //Wait for them to reach to the position
+        while (motor_5.isBusy()){
+            //Waiting for Robot to travel the distance
+            telemetry.addData("Down", "Moving");
+            telemetry.addData("Current Motor 5", motor_5.getCurrentPosition());
+            telemetry.update();
+        }
+
+        //Reached the distance, so stop the motors
+        motor_5.setPower(0);
+        Log.i(TAG, "Completed decent at : " + System.currentTimeMillis());
+
+        if (DEBUG){
+            telemetry.addData("Actual Ticks needed", ticks);
+            telemetry.addData("Actual Ticks Motor 5", motor_5.getCurrentPosition());
+            telemetry.update();
+
+            Log.i(TAG, "Moving Down");
+            Log.i(TAG, "TICKS needed" + ticks );
+            Log.i(TAG, "Actual Ticks Motor 5" + motor_5.getCurrentPosition() );
+        }
+
+        telemetry.addData("Down", "Completed");
+        telemetry.update();
+        Log.i(TAG, "Exit Function: unlatchUsingEncoderPosition");
+    }
+
+    // Come down using encoder speed and come out of latch
+    public void unlatchUsingEncoderSpeed (double power){
+        telemetry.addData("Direction", "Down");
+        telemetry.update();
+        Log.i(TAG, "Enter Function: unlatchUsingEncoderSpeed");
+        Log.i(TAG, "Starting decent at : " + System.currentTimeMillis());
+
+        motor_5.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_5.setPower(power);
+
+        try {
+            sleep(4000);
+        } catch (Exception e) {}
+
+        //Reached the distance, so stop the motors
+        motor_5.setPower(0);
+
+        Log.i(TAG, "Completed decent at : " + System.currentTimeMillis());
+        telemetry.addData("Down", "Completed");
+        telemetry.update();
+        Log.i(TAG, "Exit Function: unlatchUsingEncoderSpeed");
+    }
 
 
     // Move forward to specific distance in inches, with power (0 to 1)
