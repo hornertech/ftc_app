@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class FinalTeleOp extends LinearOpMode{
+public class TeleopTest extends LinearOpMode{
 
     @Override
     public void runOpMode()  {
@@ -103,7 +103,7 @@ public class FinalTeleOp extends LinearOpMode{
                 telemetry.update();
                 robot.latch.setPower(1);
                 //sleep(1);
-               // robot.latch.setPower(0);
+                // robot.latch.setPower(0);
             } else if (rightBumper == true) {
                 telemetry.addData("TeleOP", "New Code");
                 telemetry.update();

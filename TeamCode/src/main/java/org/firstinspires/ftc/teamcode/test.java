@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,13 +15,19 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 @Autonomous
-public class Autonomous_Crater extends LinearOpMode {
+public class test extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 
+    private static final int GOLD_MINERAL_FOUND = 0;
+    private static final int SILVER_MINERAL_FOUND = 1;
+    private static final int NO_MINERAL_FOUND = 2;
+
+
     public boolean debugOn = false;
     public boolean test = false;
+    public  String TAG = "FTC_APP";
 
     public int detectionCount = 0;
 
@@ -60,37 +68,44 @@ public class Autonomous_Crater extends LinearOpMode {
         return false;
     }
 
-    public void ZigZag(org.firstinspires.ftc.teamcode.Robot robot, int i)
+    public void ZigZag(org.firstinspires.ftc.teamcode.Robot robot, int iteration,
+                                                        int distance, double power)
     {
-        switch(i){
+        int sleeptime = 100;
+        switch(iteration){
             case 0: {
-                robot.moveF(15); //Move forward 2 inch from center
-                sleep(100);
+                Log.i(TAG, "ZigZag Moving Forward");
+                robot.moveForward(power, distance); //Move forward 2 inch from center
+                sleep(sleeptime);
                 return;
             }
 
             case 1: {
-                robot.moveB(30); //Move back 2 inches from center
-                sleep(100);
+                Log.i(TAG, "ZigZag Moving Backward");
+                robot.moveBackward(power, 2*distance); //Move back 2 inches from center
+                sleep(sleeptime);
                 return;
             }
 
             case 2: {
-                robot.moveF(15); //Come to center
-                robot.moveL(15); //Move Left 2 inches from center
-                sleep(100);
+                Log.i(TAG, "ZigZag Moving Left");
+                robot.moveForward(power, distance); //Come to center
+                robot.moveLeft(power, distance); //Move Left 2 inches from center
+                sleep(sleeptime);
                 return;
             }
 
             case 3: {
-                robot.moveR(30); // Move 2 inches right from center
-                sleep(100);
+                Log.i(TAG, "ZigZag Moving Right");
+                robot.moveRight(power, 2 * distance); // Move 2 inches right from center
+                sleep(sleeptime);
                 return;
             }
 
             case 4: {
-                robot.moveL(15); //Come back to center, detection failed
-                sleep(100);
+                Log.i(TAG, "ZigZag Coming back to center");
+                robot.moveLeft(power, distance); //Come back to center, detection failed
+                sleep(sleeptime);
                 return;
             }
 
@@ -102,45 +117,59 @@ public class Autonomous_Crater extends LinearOpMode {
         }
     }
 
-    public boolean detectOnceNew(org.firstinspires.ftc.teamcode.Robot robot) {
+    public int detectOnceNew(org.firstinspires.ftc.teamcode.Robot robot) {
+        Log.i(TAG, "Starting Detection ");
+        int zigzag_distance = 2;
+        double zigzag_power = 0.3;
         for (int i = 0; i < 5; i++) {
+            Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                     telemetry.update();
+                    Log.i(TAG, "Number of object detected " + updatedRecognitions.size());
                     if (updatedRecognitions.size() == 1) {
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                Log.i(TAG, "Gold Mineral Found, Lets move it");
                                 telemetry.addData("Gold Mineral", "Detected!");
                                 telemetry.update();
-                                return true;
+                                return GOLD_MINERAL_FOUND;
                             } else {
+                                Log.i(TAG, "Silver Mineral Found, Move ON");
                                 telemetry.addData("Gold Mineral", "Not detected!");
                                 telemetry.update();
-                                return false;
+                                return SILVER_MINERAL_FOUND;
                             }
                         }
                     } else{ //More than one object detected, lets move around a little
+                        Log.i(TAG, "Number of object detected More than 1");
+                        Log.i(TAG, "Move around to see if we can detect in next iteration");
                         telemetry.addData("Detection", "Trying to move around");
                         telemetry.update();
-                        ZigZag(robot, i);
+                        ZigZag(robot, i, zigzag_distance, zigzag_power);
                     }
-                } else { //Zero object detected, lets try to move around a little
+                } else {//Zero object detected, lets try to move around a little
+                    Log.i(TAG, "Number of object detected 0");
+                    Log.i(TAG, "Move around to see if we can detect in next iteration");
                     telemetry.addData("Detection", "Trying to move around");
                     telemetry.update();
-                    ZigZag(robot, i);
+                    ZigZag(robot, i, zigzag_distance, zigzag_power);
                 }
             } else { //TFOD is not initailized properly, push the element in front (middle)
                 telemetry.addData("Tfod", "Not Initialized!");
                 telemetry.update();
-                return true;
+                Log.e(TAG, "TFOD Not initialized, returning");
+                return NO_MINERAL_FOUND;
             }
         }
-        return true;
+        return NO_MINERAL_FOUND;
     }
 
     public void runOpMode() {
+
+        int detect_result;
         initVuforia();
 
         initTfod();
@@ -180,26 +209,45 @@ if (test) {
     //Begin step 2
     telemetry.addData("Detection", "Started");
     telemetry.update();
-    if (detectOnce() == true) {
+
+    detect_result = detectOnceNew(robot);
+    if (detect_result == GOLD_MINERAL_FOUND) {
+        Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
         //Knock off mineral
         robot.moveF(270);
         robot.pause();
         robot.moveB(200);
-        if (debugOn == true) sleep(5000);
-    } else {
-        if (debugOn == true) sleep(5000);
-        //Move right 14.5 in.
-        robot.moveR(500);
 
-        if (detectOnce() == true) {
+    } else if (detect_result == NO_MINERAL_FOUND) {
+        Log.i(TAG, "Detection Problem at center : Still Knocking off");
+        //for time being knock off the mineral
+        robot.moveF(270);
+        robot.pause();
+        robot.moveB(200);
+    } else {//Move right 14.5 in.
+        Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
+        robot.moveR(500);
+        detect_result = detectOnceNew(robot);
+        if (detect_result == GOLD_MINERAL_FOUND) {
+            Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
             //Knock off mineral
             robot.moveF(270);
             robot.pause();
             robot.moveB(270);
-            if (debugOn == true) sleep(5000);
+            //Come back to center
             robot.moveL(500);
             robot.moveB(100);
-        } else {
+        } else if (detect_result == NO_MINERAL_FOUND) {
+            Log.i(TAG, "Detection Problem at right location : Still Knocking off");
+            //Knock off mineral
+            robot.moveF(270);
+            robot.pause();
+            robot.moveB(270);
+            //Come back to center
+            robot.moveL(500);
+            robot.moveB(100);
+        } else { // Knock of Leftmost Mineral
+            Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
             if (debugOn == true) sleep(5000);
             //Move left 29 in.
             robot.moveL(1350);
@@ -233,7 +281,12 @@ if (test) {
     //End Step 3
 }
         //Begin Step 4
-        robot.moveF(1350);
+        //robot.moveF(1000);
+        robot.moveForward(0.5, 48);
+        robot.moveRight(0.5, 20);
+        robot.moveLeft(0.5, 20);
+        robot.moveBackward(0.5, 48);
+     //   robot.turnNew(0.5, 90);
         //End step 3
 
         if (tfod != null) {
