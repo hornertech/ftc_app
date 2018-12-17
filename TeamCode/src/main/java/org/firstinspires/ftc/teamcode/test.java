@@ -75,36 +75,36 @@ public class test extends LinearOpMode {
         switch(iteration){
             case 0: {
                 Log.i(TAG, "ZigZag Moving Forward");
-                robot.moveForward(power, distance); //Move forward 2 inch from center
+                robot.moveForwardToPosition(power, distance); //Move forward 2 inch from center
                 sleep(sleeptime);
                 return;
             }
 
             case 1: {
                 Log.i(TAG, "ZigZag Moving Backward");
-                robot.moveBackward(power, 2*distance); //Move back 2 inches from center
+                robot.moveBackwardToPosition(power, 2*distance); //Move back 2 inches from center
                 sleep(sleeptime);
                 return;
             }
 
             case 2: {
                 Log.i(TAG, "ZigZag Moving Left");
-                robot.moveForward(power, distance); //Come to center
-                robot.moveLeft(power, distance); //Move Left 2 inches from center
+                robot.moveForwardToPosition(power, distance); //Come to center
+                robot.moveLeftToPosition(power, distance); //Move Left 2 inches from center
                 sleep(sleeptime);
                 return;
             }
 
             case 3: {
                 Log.i(TAG, "ZigZag Moving Right");
-                robot.moveRight(power, 2 * distance); // Move 2 inches right from center
+                robot.moveRightToPosition(power, 2 * distance); // Move 2 inches right from center
                 sleep(sleeptime);
                 return;
             }
 
             case 4: {
                 Log.i(TAG, "ZigZag Coming back to center");
-                robot.moveLeft(power, distance); //Come back to center, detection failed
+                robot.moveLeftToPosition(power, distance); //Come back to center, detection failed
                 sleep(sleeptime);
                 return;
             }
@@ -118,7 +118,7 @@ public class test extends LinearOpMode {
     }
 
     public int detectOnceNew(org.firstinspires.ftc.teamcode.Robot robot) {
-        Log.i(TAG, "Starting Detection ");
+        Log.i(TAG, "Enter FUNC:  detectOnceNew");
         int zigzag_distance = 2;
         double zigzag_power = 0.3;
         for (int i = 0; i < 5; i++) {
@@ -128,7 +128,7 @@ public class test extends LinearOpMode {
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                     telemetry.update();
-                    Log.i(TAG, "Number of object detected " + updatedRecognitions.size());
+                    Log.i(TAG, "Number of object detected : " + updatedRecognitions.size());
                     if (updatedRecognitions.size() == 1) {
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
@@ -164,6 +164,8 @@ public class test extends LinearOpMode {
                 return NO_MINERAL_FOUND;
             }
         }
+        Log.i(TAG, "All Iteration Done, No Mineral Found");
+        Log.i(TAG, "Exit FUNC: detectOnceNew");
         return NO_MINERAL_FOUND;
     }
 
@@ -180,6 +182,9 @@ public class test extends LinearOpMode {
         telemetry.update();
         waitForStart();
         Log.i(TAG, "*************Starting Autonomous TEST**************************");
+
+        long start_time = System.currentTimeMillis();
+        long time_taken;
         if (opModeIsActive()) {
             if (tfod != null) {
                 tfod.activate();
@@ -187,73 +192,79 @@ public class test extends LinearOpMode {
         }
         //Begin step 1
         //Drop from lander
-if (test) {
-    robot.unlatchUsingEncoderPosition(0.75);
- //   robot.unlatchUsingEncoderSpeed(0.75);
-    //Move out of the latch
-    robot.moveL(100);
-    robot.moveF(320);
-    robot.moveR(150);
+
+            Log.i(TAG,"STEP 1: Come Down and Unlatch");
+
+    robot.unlatchUsingEncoderPosition(1);
+    robot.moveRightToPosition(1, 4);
+    robot.moveBackwardForTime(0.25, 250, false);
+    robot.moveForwardToPosition(0.5, 17);
+
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG,"STEP 1: Completed after : " + time_taken + " milli seconds");
     //End step 1
 
     //Begin step 2
     telemetry.addData("Detection", "Started");
     telemetry.update();
+    Log.i(TAG,"STEP 2: Detect and Dislodge ");
 
     detect_result = detectOnceNew(robot);
     if (detect_result == GOLD_MINERAL_FOUND) {
         Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
         //Knock off mineral
-        robot.moveF(270);
+        robot.moveForwardToPosition(0.5, 14);
         robot.pause();
-        robot.moveB(200);
+        robot.moveBackwardToPosition(0.5, 14);
 
-    } else if (detect_result == NO_MINERAL_FOUND) {
+    }
+    else if (detect_result == NO_MINERAL_FOUND) {
         Log.i(TAG, "Detection Problem at center : Still Knocking off");
         //for time being knock off the mineral
-        robot.moveF(270);
+        robot.moveForwardToPosition(0.5, 14);
         robot.pause();
-        robot.moveB(200);
+        robot.moveBackwardToPosition(0.5, 14);
     } else {//Move right 14.5 in.
         Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-        robot.moveR(500);
+        robot.moveRightToPosition(0.5, 16);
         detect_result = detectOnceNew(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
             //Knock off mineral
-            robot.moveF(270);
+            robot.moveForwardToPosition(0.5, 14);
             robot.pause();
-            robot.moveB(270);
+            robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveL(500);
-            robot.moveB(100);
+            robot.moveLeftToPosition(0.5, 16);
         } else if (detect_result == NO_MINERAL_FOUND) {
             Log.i(TAG, "Detection Problem at right location : Still Knocking off");
             //Knock off mineral
-            robot.moveF(270);
+            robot.moveForwardToPosition(0.5, 14);
             robot.pause();
-            robot.moveB(270);
+            robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveL(500);
-            robot.moveB(100);
+            robot.moveLeftToPosition(0.5, 16);
         } else { // Knock of Leftmost Mineral
             Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
             if (debugOn == true) sleep(5000);
-            //Move left 29 in.
-            robot.moveL(1350);
+            //Move left 232 in.
+            robot.moveLeftToPosition(0.5, 32);
             //Knock off mineral
-            robot.moveF(270);
+            robot.moveForwardToPosition(0.5, 14);
             robot.pause();
-            robot.moveB(220);
-            robot.moveR(645);
-            robot.moveB(60);
+            robot.moveBackwardToPosition(0.5, 14);
+
+            //Come Back to Center
+            robot.moveLeftToPosition(0.5, 16);
         }
     }
-
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG,"STEP 2: Completed after : " + time_taken + "Milli Seconds");
     //End step 2
-
+        if (test) {
     //Begin step 3
     //Add wall alignment here
+    Log.i(TAG,"STEP 3: Drop Team Marker ");
     sleep(1000);
     robot.moveL(1650);
     robot.turn(300);
@@ -268,16 +279,16 @@ if (test) {
     robot.drop_marker();
     robot.pause();
     robot.pause();
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG,"STEP 3: Completed after : " + time_taken + "Milli Seconds");
     //End Step 3
+
+    Log.i(TAG,"STEP 4: Park At Crater ");
+    //Begin Step 4
+    robot.moveB(1000);
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG,"STEP 4: Completed after : " + time_taken + "Milli Seconds");
 }
-        //Begin Step 4
-        //robot.moveF(1000);
-        robot.moveForward(0.5, 48);
-        robot.moveRight(0.5, 20);
-        robot.moveLeft(0.5, 20);
-        robot.moveBackward(0.5, 48);
-     //   robot.turnNew(0.5, 90);
-        //End step 3
 
         if (tfod != null) {
             tfod.shutdown();

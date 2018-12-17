@@ -31,6 +31,10 @@ public class TeleopTest extends LinearOpMode{
         waitForStart();
 
         robot.holder.setPower(1);
+      /*  robot.motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
         while (opModeIsActive()) {
             telemetry.addData("TeleOP", "New Code");
