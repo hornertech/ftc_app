@@ -40,7 +40,7 @@ public class Robot extends java.lang.Thread {
     public boolean debugOn = false;
     public boolean isTeleOp = true;
     public int     inverse = 1;
-    public boolean DEBUG = true;
+    public boolean DEBUG = false;
 
     public long movementFactor = 1;
     public long slideFactor = 1;
@@ -67,11 +67,11 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Enter FUNC: DistanceToTick");
 
         double circumference = WHEEL_DIAMETER * 3.14;
-        double num_rotation  = distance/circumference;
-        int encoder_ticks    = (int)(num_rotation * TICKS_PER_ROTATION);
+        double num_rotation = distance / circumference;
+        int encoder_ticks = (int) (num_rotation * TICKS_PER_ROTATION);
 
- //       Log.i(TAG,"Rotation Needed : " + num_rotation);
- //       Log.i(TAG,"Ticks Needed : " + encoder_ticks);
+        //       Log.i(TAG,"Rotation Needed : " + num_rotation);
+        Log.i(TAG, "Ticks Needed : " + encoder_ticks);
         Log.i(TAG, "Exit FUNC: DistanceToTick");
 
         return (encoder_ticks);
@@ -175,10 +175,12 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
       //  while ((motor_2.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_0.isBusy())){
         while (motor_0.isBusy()) {
-            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            if (DEBUG) {
+                Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            }
             //Waiting for Robot to travel the distance
             telemetry.addData("Backward", "Moving");
             telemetry.update();
@@ -234,10 +236,12 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
        // while ((motor_0.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
-            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            if (DEBUG) {
+                Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            }
             //Waiting for Robot to travel the distance
             telemetry.addData("Backward", "Moving");
             telemetry.update();
@@ -295,10 +299,12 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
        // while ((motor_1.isBusy() && motor_3.isBusy()) || (motor_0.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
-            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            if (DEBUG) {
+                Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            }
             //Waiting for Robot to travel the distance
             telemetry.addData("Backward", "Moving");
             telemetry.update();
@@ -310,7 +316,7 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed" + ticks);
+        Log.i(TAG, "TICKS needed : " + ticks);
         Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
         Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
         Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
@@ -353,10 +359,12 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
        // while ((motor_0.isBusy() && motor_2.isBusy()) || (motor_1.isBusy() && motor_3.isBusy())){
         while (motor_0.isBusy()) {
-            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            if (DEBUG) {
+                Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+                Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            }
             //Waiting for Robot to travel the distance
             telemetry.addData("Backward", "Moving");
             telemetry.update();
@@ -368,7 +376,7 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed" + ticks);
+        Log.i(TAG, "TICKS needed : " + ticks);
         Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
         Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
         Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
