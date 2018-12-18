@@ -119,7 +119,7 @@ public class test extends LinearOpMode {
 
     public int detectOnceNew(org.firstinspires.ftc.teamcode.Robot robot) {
         Log.i(TAG, "Enter FUNC:  detectOnceNew");
-        int zigzag_distance = 2;
+        int zigzag_distance = 3;
         double zigzag_power = 0.3;
         for (int i = 0; i < 5; i++) {
             Log.i(TAG, "Iteration # " + i);
@@ -195,7 +195,7 @@ public class test extends LinearOpMode {
 
             Log.i(TAG,"STEP 1: Come Down and Unlatch");
 
-    robot.unlatchUsingEncoderPosition(1);
+    robot.unlatchUsingEncoderPosition(1, 1);
     robot.moveRightToPosition(1, 4);
     robot.moveBackwardForTime(0.25, 250, false);
     robot.moveForwardToPosition(0.5, 17);
@@ -261,16 +261,29 @@ public class test extends LinearOpMode {
     time_taken = System.currentTimeMillis() - start_time;
     Log.i(TAG,"STEP 2: Completed after : " + time_taken + "Milli Seconds");
     //End step 2
-        if (test) {
+
     //Begin step 3
     //Add wall alignment here
     Log.i(TAG,"STEP 3: Drop Team Marker ");
-    sleep(1000);
-    robot.moveL(1650);
-    robot.turn(300);
+    robot.moveLeftToPosition(0.8, 43);
+    robot.turn(0.6, 900);
     robot.wall_align(0.25);
-    robot.pause();
-    robot.moveL(130);
+   // robot.pause();
+    robot.moveLeftToPosition(0.5, 3);
+    robot.moveForwardToPosition(0.75, 62);
+    sleep(1000);
+
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG,"STEP 3: Completed after : " + time_taken + "Milli Seconds");
+
+        Log.i(TAG, "STEP 4: Park At Crater ");
+        //Begin Step 4
+        robot.moveBackwardToPosition(1, 72);
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 4: Completed after : " + time_taken + "Milli Seconds");
+    robot.unlatchUsingEncoderPosition(1, -1);
+
+        if(test){
     robot.moveF(800);
     robot.pause();
     robot.pause();
@@ -279,16 +292,14 @@ public class test extends LinearOpMode {
     robot.drop_marker();
     robot.pause();
     robot.pause();
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG,"STEP 3: Completed after : " + time_taken + "Milli Seconds");
+
     //End Step 3
 
-    Log.i(TAG,"STEP 4: Park At Crater ");
-    //Begin Step 4
-    robot.moveB(1000);
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG,"STEP 4: Completed after : " + time_taken + "Milli Seconds");
+
 }
+   // robot.moveLeftToPosition(0.5, 48);
+   //  sleep(2000);
+   // robot.moveRightToPosition(0.5, 48);
 
         if (tfod != null) {
             tfod.shutdown();
