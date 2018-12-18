@@ -91,7 +91,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Come down using encoder moveToPosition and come out of latch
-    public void unlatchUsingEncoderPosition (double power){
+    public void unlatchUsingEncoderPosition (double power, int direction){
         Log.i(TAG, "Enter Function: unlatchUsingEncoderPosition");
         long time = System.currentTimeMillis();
 
@@ -102,7 +102,7 @@ public class Robot extends java.lang.Thread {
         int ticks = (int) (12 * TICKS_PER_ROTATION);
 
         // Set the target position and power and run to position
-        latch.setTargetPosition(ticks);
+        latch.setTargetPosition((direction) * ticks);
         latch.setPower(power);
         latch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -173,9 +173,14 @@ public class Robot extends java.lang.Thread {
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Wait for them to reach to the position
-        while ( motor_2.isBusy() || motor_3.isBusy() ){
+      //  while ((motor_2.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_0.isBusy())){
+        while (motor_0.isBusy()) {
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
             //Waiting for Robot to travel the distance
-            telemetry.addData("Forward", "Moving");
+            telemetry.addData("Backward", "Moving");
             telemetry.update();
         }
 
@@ -215,10 +220,10 @@ public class Robot extends java.lang.Thread {
         motor_3.setTargetPosition(ticks);
 
         //Set power of all motors
-        motor_0.setPower(power);
+        motor_0.setPower(power * 0.9);
         motor_1.setPower(power);
         motor_2.setPower(power);
-        motor_3.setPower(power);
+        motor_3.setPower(power * 1.1);
 
         //Set Motors to RUN_TO_POSITION
         motor_0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -227,7 +232,12 @@ public class Robot extends java.lang.Thread {
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Wait for them to reach to the position
-        while (motor_0.isBusy() || motor_3.isBusy() ){
+       // while ((motor_0.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_2.isBusy())){
+        while (motor_0.isBusy()) {
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
             //Waiting for Robot to travel the distance
             telemetry.addData("Backward", "Moving");
             telemetry.update();
@@ -271,9 +281,9 @@ public class Robot extends java.lang.Thread {
 
         //Set power of all motors
         motor_0.setPower(power);
-        motor_1.setPower(power);
-        motor_2.setPower(power);
-        motor_3.setPower(power);
+        motor_1.setPower(power * 1.03);
+        motor_2.setPower(power * 1.06);
+        motor_3.setPower(power * 1.08);
 
         //Set Motors to RUN_TO_POSITION
         motor_0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -281,13 +291,18 @@ public class Robot extends java.lang.Thread {
         motor_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         //Wait for them to reach to the position
-        while (motor_1.isBusy()  || motor_3.isBusy() ){
+       // while ((motor_1.isBusy() && motor_3.isBusy()) || (motor_0.isBusy() && motor_2.isBusy())){
+        while (motor_0.isBusy()) {
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
             //Waiting for Robot to travel the distance
-            telemetry.addData("Left", "Moving");
+            telemetry.addData("Backward", "Moving");
             telemetry.update();
         }
-
 
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
@@ -334,13 +349,18 @@ public class Robot extends java.lang.Thread {
         motor_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         //Wait for them to reach to the position
-        while (motor_0.isBusy() ||motor_2.isBusy() ){
+       // while ((motor_0.isBusy() && motor_2.isBusy()) || (motor_1.isBusy() && motor_3.isBusy())){
+        while (motor_0.isBusy()) {
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
             //Waiting for Robot to travel the distance
-            telemetry.addData("Right", "Moving");
+            telemetry.addData("Backward", "Moving");
             telemetry.update();
         }
-
 
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
@@ -800,12 +820,17 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void turn (long angle) {
+    public void turn (double power, long angle) {
+        motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         if (angle > 0) {
-            motor_0.setPower(1);
-            motor_1.setPower(1);
-            motor_2.setPower(1);
-            motor_3.setPower(1);
+            motor_0.setPower(power);
+            motor_1.setPower(power);
+            motor_2.setPower(power);
+            motor_3.setPower(power);
             try {
                 sleep(angle * turnFactor);
             } catch (Exception e) {}
@@ -816,10 +841,10 @@ public class Robot extends java.lang.Thread {
             pause();
             pause();
         } else {
-            motor_0.setPower(-1);
-            motor_1.setPower(-1);
-            motor_2.setPower(-1);
-            motor_3.setPower(-1);
+            motor_0.setPower(-1 * power);
+            motor_1.setPower(-1 * power);
+            motor_2.setPower(-1 * power);
+            motor_3.setPower(-1 * power);
             try {
                 sleep(angle * -turnFactor);
             } catch (Exception e) {}
@@ -832,6 +857,10 @@ public class Robot extends java.lang.Thread {
         }
     }
     public void slow_turn (long angle) {
+        motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (angle > 0) {
             motor_0.setPower(0.5);
             motor_1.setPower(0.5);
@@ -864,10 +893,15 @@ public class Robot extends java.lang.Thread {
     }
 
     public void wall_align(double power) {
-        motor_0.setPower(power);
-        motor_1.setPower(power);
-        motor_2.setPower(-1 * power);
-        motor_3.setPower(-1 * power);
+        motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motor_0.setPower(-1 * power);
+        motor_1.setPower(-1 * power);
+        motor_2.setPower(power);
+        motor_3.setPower(power);
         try {
             sleep(2100);
         } catch (Exception e) {}
@@ -878,6 +912,12 @@ public class Robot extends java.lang.Thread {
     }
 
     public void wall_align_back(double power, int time) {
+        //Set Motors to RUN_TO_POSITION
+        motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         motor_0.setPower(-1 * power);
         motor_1.setPower(power);
         motor_2.setPower(-1 * power);

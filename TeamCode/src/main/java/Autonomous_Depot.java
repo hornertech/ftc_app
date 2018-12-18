@@ -156,7 +156,7 @@ public class Autonomous_Depot extends LinearOpMode {
         //Begin step 3
         sleep(1000);
         robot.moveL(1700);     //Move left Side
-        robot.turn(-60);       //Turn anti-clock wise to align with wall
+        robot.turn(1,-60);       //Turn anti-clock wise to align with wall
         robot.wall_align(-0.25);
         robot.pause(250);
         robot.moveR(100);     //Move away from wall

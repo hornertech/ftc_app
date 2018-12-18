@@ -218,7 +218,7 @@ if (test) {
     //Add wall alignment here
     sleep(1000);
     robot.moveL(1650);
-    robot.turn(300);
+    robot.turn(1,300);
     robot.wall_align(0.25);
     robot.pause();
     robot.moveL(130);
