@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Log;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
 import com.qualcomm.robotcore.util.Hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +14,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.List;
+import java.util.List;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
 
 public class Robot extends java.lang.Thread {
 
@@ -20,7 +31,7 @@ public class Robot extends java.lang.Thread {
 
     private static final int TICKS_PER_ROTATION = 1440; //Tetrix motor specific
     private static final int WHEEL_DIAMETER = 6; //Wheel diameter in inches
-    public  String TAG = "FTC_APP";
+    public String TAG = "FTC_APP";
 
     public Gyroscope imu;
     public CRServo grabber_1;
@@ -39,7 +50,7 @@ public class Robot extends java.lang.Thread {
 
     public boolean debugOn = false;
     public boolean isTeleOp = true;
-    public int     inverse = 1;
+    public int inverse = 1;
     public boolean DEBUG = false;
 
     public long movementFactor = 1;
@@ -48,18 +59,19 @@ public class Robot extends java.lang.Thread {
     public long turnFactor = 1;
     private boolean detect = true; // For debugging purpose
 
-    Robot (HardwareMap map, Telemetry tel) {
+
+    Robot(HardwareMap map, Telemetry tel) {
         hardwareMap = map;
         telemetry = tel;
-        initDevices ();
+        initDevices();
     }
 
-    public void pause () {
+    public void pause() {
         try {
             sleep(250);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
-
 
     // This function takes input distance in inches and will return Motor ticks needed
     // to travel that distance based on wheel diameter
@@ -82,7 +94,7 @@ public class Robot extends java.lang.Thread {
     public int AngleToTick(double angle) {
         Log.i(TAG, "Enter FUNC: AngleToTick");
 
-        int encoder_ticks    = (int)((java.lang.Math.abs(angle) * TICKS_PER_ROTATION * 2.75)/360);
+        int encoder_ticks = (int) ((java.lang.Math.abs(angle) * TICKS_PER_ROTATION * 2.75) / 360);
 
         Log.i(TAG, "Ticks needed for Angle : " + encoder_ticks);
         Log.i(TAG, "Exit FUNC: AngleToTick");
@@ -91,7 +103,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Come down using encoder moveToPosition and come out of latch
-    public void unlatchUsingEncoderPosition (double power, int direction){
+    public void unlatchUsingEncoderPosition(double power, int direction) {
         Log.i(TAG, "Enter Function: unlatchUsingEncoderPosition");
         long time = System.currentTimeMillis();
 
@@ -108,7 +120,7 @@ public class Robot extends java.lang.Thread {
 
 
         //Wait for them to reach to the position
-        while (latch.isBusy()){
+        while (latch.isBusy()) {
             //Waiting for Robot to travel the distance
             telemetry.addData("Down", "Moving");
             telemetry.update();
@@ -123,7 +135,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Come down using encoder speed and come out of latch
-    public void unlatchUsingEncoderSpeed (double power){
+    public void unlatchUsingEncoderSpeed(double power) {
         Log.i(TAG, "Enter Function: unlatchUsingEncoderSpeed");
         Log.i(TAG, "Starting decent at : " + System.currentTimeMillis());
 
@@ -132,7 +144,8 @@ public class Robot extends java.lang.Thread {
 
         try {
             sleep(4000);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         //Reached the distance, so stop the motors
         latch.setPower(0);
@@ -143,7 +156,7 @@ public class Robot extends java.lang.Thread {
 
 
     // Move forward to specific distance in inches, with power (0 to 1)
-    public void moveForwardToPosition (double power, int distance){
+    public void moveForwardToPosition(double power, int distance) {
         Log.i(TAG, "Enter Function: moveForwardToPosition Power : " + power + " and distance : " + distance);
         // Reset all encoders
         motor_0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -173,7 +186,7 @@ public class Robot extends java.lang.Thread {
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Wait for them to reach to the position
-      //  while ((motor_2.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_0.isBusy())){
+        //  while ((motor_2.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_0.isBusy())){
         while (motor_0.isBusy()) {
             if (DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
@@ -203,7 +216,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Move backward to specific distance in inches, with power (0 to 1)
-    public void moveBackwardToPosition (double power, int distance){
+    public void moveBackwardToPosition(double power, int distance) {
         Log.i(TAG, "Enter Function: moveBackwardToPosition Power : " + power + " and distance : " + distance);
 
         // Reset all encoders
@@ -234,7 +247,7 @@ public class Robot extends java.lang.Thread {
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Wait for them to reach to the position
-       // while ((motor_0.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_2.isBusy())){
+        // while ((motor_0.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
             if (DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
@@ -265,7 +278,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Move Left to specific distance in inches, with power (0 to 1)
-    public void moveLeftToPosition (double power, int distance){
+    public void moveLeftToPosition(double power, int distance) {
         Log.i(TAG, "Enter Function: moveLeftToPosition Power : " + power + " and distance : " + distance);
 
         // Reset all encoders
@@ -279,7 +292,7 @@ public class Robot extends java.lang.Thread {
 
         // Set the target position for all motors (in ticks)
         motor_0.setTargetPosition(ticks);
-        motor_1.setTargetPosition( ticks);
+        motor_1.setTargetPosition(ticks);
         motor_2.setTargetPosition((-1) * ticks);
         motor_3.setTargetPosition((-1) * ticks);
 
@@ -297,7 +310,7 @@ public class Robot extends java.lang.Thread {
 
 
         //Wait for them to reach to the position
-       // while ((motor_1.isBusy() && motor_3.isBusy()) || (motor_0.isBusy() && motor_2.isBusy())){
+        // while ((motor_1.isBusy() && motor_3.isBusy()) || (motor_0.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
             if (DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
@@ -325,7 +338,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Move Right to specific distance in inches, with power (0 to 1)
-    public void moveRightToPosition (double power, int distance){
+    public void moveRightToPosition(double power, int distance) {
         Log.i(TAG, "Enter Function: moveRightToPosition Power : " + power + " and distance : " + distance);
 
         // Reset all encoders
@@ -357,7 +370,7 @@ public class Robot extends java.lang.Thread {
 
 
         //Wait for them to reach to the position
-       // while ((motor_0.isBusy() && motor_2.isBusy()) || (motor_1.isBusy() && motor_3.isBusy())){
+        // while ((motor_0.isBusy() && motor_2.isBusy()) || (motor_1.isBusy() && motor_3.isBusy())){
         while (motor_0.isBusy()) {
             if (DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
@@ -395,9 +408,12 @@ public class Robot extends java.lang.Thread {
     /* Params:    IN     power         - Speed  (-1 to 1)                        */
     /*            IN     time          - Time in MilliSeconds                    */
     /*                                                                           */
-    /**PROC-**********************************************************************/
+
+    /**
+     * PROC-
+     **********************************************************************/
     // Move forward for specific time in milliseconds, with power (0 to 1)
-    public void moveForwardForTime (double power, int time, boolean speed){
+    public void moveForwardForTime(double power, int time, boolean speed) {
         Log.i(TAG, "Enter Function: moveForwardForTime Power : " + power + " and time : " + time + "Speed : " + speed);
         // Reset all encoders
         long motor0_start_position = motor_0.getCurrentPosition();
@@ -405,7 +421,7 @@ public class Robot extends java.lang.Thread {
         long motor2_start_position = motor_2.getCurrentPosition();
         long motor3_start_position = motor_3.getCurrentPosition();
 
-        if (speed == true){
+        if (speed == true) {
             motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -426,7 +442,8 @@ public class Robot extends java.lang.Thread {
 
         try {
             sleep(time);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
 
         //Reached the distance, so stop the motors
@@ -448,7 +465,7 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Exit Function: moveForwardForTime");
     }
 
-    public void moveBackwardForTime (double power, int time, boolean speed){
+    public void moveBackwardForTime(double power, int time, boolean speed) {
         Log.i(TAG, "Enter Function: moveBackwardForTime Power : " + power + " and time : " + time + "Speed : " + speed);
         // Reset all encoders
         long motor0_start_position = motor_0.getCurrentPosition();
@@ -456,7 +473,7 @@ public class Robot extends java.lang.Thread {
         long motor2_start_position = motor_2.getCurrentPosition();
         long motor3_start_position = motor_3.getCurrentPosition();
 
-        if (speed == true){
+        if (speed == true) {
             motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -477,7 +494,8 @@ public class Robot extends java.lang.Thread {
 
         try {
             sleep(time);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
 
         //Reached the distance, so stop the motors
@@ -499,7 +517,7 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Exit Function: moveBackwardForTime");
     }
 
-    public void moveRightForTime (double power, int time, boolean speed){
+    public void moveRightForTime(double power, int time, boolean speed) {
         Log.i(TAG, "Enter Function: moveRightForTime Power : " + power + " and time : " + time + "Speed : " + speed);
         // Reset all encoders
         long motor0_start_position = motor_0.getCurrentPosition();
@@ -507,7 +525,7 @@ public class Robot extends java.lang.Thread {
         long motor2_start_position = motor_2.getCurrentPosition();
         long motor3_start_position = motor_3.getCurrentPosition();
 
-        if (speed == true){
+        if (speed == true) {
             motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -528,7 +546,8 @@ public class Robot extends java.lang.Thread {
 
         try {
             sleep(time);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
 
         //Reached the distance, so stop the motors
@@ -549,7 +568,7 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Exit Function: moveRightForTime");
     }
 
-    public void moveLeftForTime (double power, int time, boolean speed){
+    public void moveLeftForTime(double power, int time, boolean speed) {
         Log.i(TAG, "Enter Function: moveLeftForTime Power : " + power + " and time : " + time + "Speed : " + speed);
 
         long motor0_start_position = motor_0.getCurrentPosition();
@@ -557,7 +576,7 @@ public class Robot extends java.lang.Thread {
         long motor2_start_position = motor_2.getCurrentPosition();
         long motor3_start_position = motor_3.getCurrentPosition();
 
-        if (speed == true){
+        if (speed == true) {
             motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -578,7 +597,8 @@ public class Robot extends java.lang.Thread {
 
         try {
             sleep(time);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
 
         //Reached the distance, so stop the motors
@@ -601,7 +621,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Move Right to specific distance in inches, with power (0 to 1)
-    public void turnNew (double power, int angle){
+    public void turnNew(double power, int angle) {
         Log.i(TAG, "Enter Function: moveRight Power : " + power + " and angle : " + angle);
 
         int orientation = 1;
@@ -613,7 +633,8 @@ public class Robot extends java.lang.Thread {
         }
         try {
             sleep(1000);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         // Reset all encoders
         motor_0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -642,7 +663,7 @@ public class Robot extends java.lang.Thread {
         motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Wait for them to reach to the position
-        while (motor_0.isBusy() || motor_1.isBusy() || motor_2.isBusy() || motor_3.isBusy() ){
+        while (motor_0.isBusy() || motor_1.isBusy() || motor_2.isBusy() || motor_3.isBusy()) {
             //Waiting for Robot to travel the distance
             telemetry.addData("Turning", "Moving");
             telemetry.update();
@@ -663,7 +684,7 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Exit Function: turnNew");
     }
 
-    public void moveB (long distance) {
+    public void moveB(long distance) {
         telemetry.addData("Direction", "Forward");
         telemetry.update();
         motor_0.setPower(-0.5);
@@ -672,7 +693,8 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -682,14 +704,15 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveF (long distance) {
+    public void moveF(long distance) {
         motor_0.setPower(0.5);
         motor_1.setPower(-0.5);
         motor_2.setPower(0.5);
         motor_3.setPower(-0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -698,7 +721,8 @@ public class Robot extends java.lang.Thread {
         telemetry.update();
         if (isTeleOp == false) pause(250);
     }
-    public void tmoveB (long distance) {
+
+    public void tmoveB(long distance) {
         telemetry.addData("Direction", "Forward");
         telemetry.update();
         motor_0.setPower(-0.25);
@@ -707,7 +731,8 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(0.25);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -717,14 +742,15 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void tmoveF (long distance) {
+    public void tmoveF(long distance) {
         motor_0.setPower(0.25);
         motor_1.setPower(-0.25);
         motor_2.setPower(0.25);
         motor_3.setPower(-0.25);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -734,14 +760,15 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveR (long distance) {
+    public void moveR(long distance) {
         motor_0.setPower(0.6);
         motor_1.setPower(0.6);
         motor_2.setPower(-0.5);
         motor_3.setPower(-0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -751,14 +778,15 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveL (long distance) {
+    public void moveL(long distance) {
         motor_0.setPower(-0.5);
         motor_1.setPower(-0.5);
         motor_2.setPower(0.5);
         motor_3.setPower(0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -768,12 +796,13 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveFL (long distance) {
+    public void moveFL(long distance) {
         motor_0.setPower(0.5);
         motor_3.setPower(-0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -783,12 +812,13 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveFR (long distance) {
+    public void moveFR(long distance) {
         motor_1.setPower(-0.5);
         motor_2.setPower(0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -798,12 +828,13 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveBL (long distance) {
+    public void moveBL(long distance) {
         motor_1.setPower(0.5);
         motor_2.setPower(-0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -813,12 +844,13 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void moveBR (long distance) {
+    public void moveBR(long distance) {
         motor_0.setPower(-0.5);
         motor_3.setPower(0.5);
         try {
             sleep(distance * movementFactor);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -828,7 +860,7 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void turn (double power, long angle) {
+    public void turn(double power, long angle) {
         motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -841,7 +873,8 @@ public class Robot extends java.lang.Thread {
             motor_3.setPower(power);
             try {
                 sleep(angle * turnFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_0.setPower(0);
             motor_1.setPower(0);
             motor_2.setPower(0);
@@ -855,7 +888,8 @@ public class Robot extends java.lang.Thread {
             motor_3.setPower(-1 * power);
             try {
                 sleep(angle * -turnFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_0.setPower(0);
             motor_1.setPower(0);
             motor_2.setPower(0);
@@ -864,7 +898,8 @@ public class Robot extends java.lang.Thread {
             pause();
         }
     }
-    public void slow_turn (long angle) {
+
+    public void slow_turn(long angle) {
         motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -876,7 +911,8 @@ public class Robot extends java.lang.Thread {
             motor_3.setPower(0.5);
             try {
                 sleep(angle * turnFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_0.setPower(0);
             motor_1.setPower(0);
             motor_2.setPower(0);
@@ -890,7 +926,8 @@ public class Robot extends java.lang.Thread {
             motor_3.setPower(-0.5);
             try {
                 sleep(-1 * angle * turnFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_0.setPower(0);
             motor_1.setPower(0);
             motor_2.setPower(0);
@@ -912,7 +949,8 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(power);
         try {
             sleep(2100);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -932,7 +970,8 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(power);
         try {
             sleep(time);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         motor_0.setPower(0);
         motor_1.setPower(0);
         motor_2.setPower(0);
@@ -968,22 +1007,25 @@ public class Robot extends java.lang.Thread {
         grabber_1.setPower(-1);
         try {
             sleep(2000);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         grabber_1.setPower(0);
     }
 
-    public void slide (long distance) {
+    public void slide(long distance) {
         if (distance >= 0) {
             motor_5.setPower(1);
             try {
                 sleep(distance * slideFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_5.setPower(0);
         } else {
             motor_5.setPower(-1);
             try {
                 sleep(-1 * distance * slideFactor);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             motor_5.setPower(0);
         }
     }
@@ -992,7 +1034,8 @@ public class Robot extends java.lang.Thread {
         latch.setPower(-1);
         try {
             sleep(100);
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
         latch.setPower(0);
     }
 
@@ -1001,32 +1044,38 @@ public class Robot extends java.lang.Thread {
         try {
             sleep(400);
             teammarker.setPower(0);
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
+
     public void hold_slide() {
         holder.setPower(1);
         try {
             sleep(50);
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     public void relatch() {
         latch.setPower(-1);
         try {
             sleep(100);
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
-    public void pause(long sleep){
+
+    public void pause(long sleep) {
         try {
             sleep(sleep);
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 
     private void initDeviceCore() throws Exception {
 
-        telemetry.addData("Please wait","In function init devices");
+        telemetry.addData("Please wait", "In function init devices");
         telemetry.update();
 
         imu = hardwareMap.get(Gyroscope.class, "imu");
@@ -1068,8 +1117,11 @@ public class Robot extends java.lang.Thread {
             initDeviceCore();
         } catch (Exception e) {
             telemetry.addData("Exception", "In function init devices" + e);
-            telemetry.update ();
-            try {sleep(10000);} catch (Exception e1) {}
+            telemetry.update();
+            try {
+                sleep(10000);
+            } catch (Exception e1) {
+            }
 
         }
 
