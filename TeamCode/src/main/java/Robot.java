@@ -3,25 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Log;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-import com.qualcomm.robotcore.util.Hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gyroscope;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import java.util.List;
-import java.util.List;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 
 public class Robot extends java.lang.Thread {
@@ -51,7 +38,8 @@ public class Robot extends java.lang.Thread {
     public boolean debugOn = false;
     public boolean isTeleOp = true;
     public int inverse = 1;
-    public boolean DEBUG = false;
+    public boolean DEBUG_DEBUG = false;
+    public boolean DEBUG_INFO = false;
 
     public long movementFactor = 1;
     public long slideFactor = 1;
@@ -76,15 +64,17 @@ public class Robot extends java.lang.Thread {
     // This function takes input distance in inches and will return Motor ticks needed
     // to travel that distance based on wheel diameter
     public int DistanceToTick(int distance) {
-        Log.i(TAG, "Enter FUNC: DistanceToTick");
+       // Log.i(TAG, "Enter FUNC: DistanceToTick");
 
         double circumference = WHEEL_DIAMETER * 3.14;
         double num_rotation = distance / circumference;
         int encoder_ticks = (int) (num_rotation * TICKS_PER_ROTATION);
 
         //       Log.i(TAG,"Rotation Needed : " + num_rotation);
-        Log.i(TAG, "Ticks Needed : " + encoder_ticks);
-        Log.i(TAG, "Exit FUNC: DistanceToTick");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "Ticks Needed : " + encoder_ticks);
+            Log.i(TAG, "Exit FUNC: DistanceToTick");
+        }
 
         return (encoder_ticks);
     }
@@ -188,7 +178,7 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
         //  while ((motor_2.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_0.isBusy())){
         while (motor_0.isBusy()) {
-            if (DEBUG) {
+            if (DEBUG_DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
@@ -206,13 +196,14 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed : " + ticks);
-        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
-
-        Log.i(TAG, "Exit Function: moveForwardToPosition");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "TICKS needed : " + ticks);
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            Log.i(TAG, "Exit Function: moveForwardToPosition");
+        }
     }
 
     // Move backward to specific distance in inches, with power (0 to 1)
@@ -249,7 +240,7 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
         // while ((motor_0.isBusy() && motor_3.isBusy()) || (motor_1.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
-            if (DEBUG) {
+            if (DEBUG_DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
@@ -267,14 +258,14 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed : " + ticks);
-        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
-
-
-        Log.i(TAG, "Exit Function: moveBackwardToPosition");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "TICKS needed : " + ticks);
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            Log.i(TAG, "Exit Function: moveBackwardToPosition");
+        }
     }
 
     // Move Left to specific distance in inches, with power (0 to 1)
@@ -312,7 +303,7 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
         // while ((motor_1.isBusy() && motor_3.isBusy()) || (motor_0.isBusy() && motor_2.isBusy())){
         while (motor_0.isBusy()) {
-            if (DEBUG) {
+            if (DEBUG_DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
@@ -329,12 +320,14 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed : " + ticks);
-        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
-        Log.i(TAG, "Exit Function: moveLeftToPosition");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "TICKS needed : " + ticks);
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            Log.i(TAG, "Exit Function: moveLeftToPosition");
+        }
     }
 
     // Move Right to specific distance in inches, with power (0 to 1)
@@ -372,7 +365,7 @@ public class Robot extends java.lang.Thread {
         //Wait for them to reach to the position
         // while ((motor_0.isBusy() && motor_2.isBusy()) || (motor_1.isBusy() && motor_3.isBusy())){
         while (motor_0.isBusy()) {
-            if (DEBUG) {
+            if (DEBUG_DEBUG) {
                 Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
                 Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
@@ -389,12 +382,14 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(0);
         motor_3.setPower(0);
 
-        Log.i(TAG, "TICKS needed : " + ticks);
-        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
-        Log.i(TAG, "Exit Function: moveRightToPosition");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "TICKS needed : " + ticks);
+            Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+            Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+            Log.i(TAG, "Exit Function: moveRightToPosition");
+        }
     }
 
 
@@ -457,12 +452,13 @@ public class Robot extends java.lang.Thread {
         long motor2_end_position = motor_2.getCurrentPosition();
         long motor3_end_position = motor_3.getCurrentPosition();
 
-        Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
-        Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
-        Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
-        Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
-
-        Log.i(TAG, "Exit Function: moveForwardForTime");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
+            Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
+            Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
+            Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
+            Log.i(TAG, "Exit Function: moveForwardForTime");
+        }
     }
 
     public void moveBackwardForTime(double power, int time, boolean speed) {
@@ -509,12 +505,13 @@ public class Robot extends java.lang.Thread {
         long motor2_end_position = motor_2.getCurrentPosition();
         long motor3_end_position = motor_3.getCurrentPosition();
 
-        Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
-        Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
-        Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
-        Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
-
-        Log.i(TAG, "Exit Function: moveBackwardForTime");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
+            Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
+            Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
+            Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
+            Log.i(TAG, "Exit Function: moveBackwardForTime");
+        }
     }
 
     public void moveRightForTime(double power, int time, boolean speed) {
@@ -530,19 +527,25 @@ public class Robot extends java.lang.Thread {
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //Set power of all motors
+            motor_0.setPower((-1) * power);
+            motor_1.setPower((-1) * power);
+            motor_2.setPower(power);
+            motor_3.setPower(power);
         } else {
             motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            //Set power of all motors
+            motor_0.setPower((-1) * power);
+            motor_1.setPower((-1) * power * (1.05));
+            motor_2.setPower(power * (0.85));
+            motor_3.setPower(power * (0.95));
         }
 
 
-        //Set power of all motors
-        motor_0.setPower((-1) * power);
-        motor_1.setPower((-1) * power);
-        motor_2.setPower(power);
-        motor_3.setPower(power);
+
 
         try {
             sleep(time);
@@ -561,11 +564,13 @@ public class Robot extends java.lang.Thread {
         long motor2_end_position = motor_2.getCurrentPosition();
         long motor3_end_position = motor_3.getCurrentPosition();
 
-        Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
-        Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
-        Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
-        Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
-        Log.i(TAG, "Exit Function: moveRightForTime");
+        if (DEBUG_INFO) {
+            Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
+            Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
+            Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
+            Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
+            Log.i(TAG, "Exit Function: moveRightForTime");
+        }
     }
 
     public void moveLeftForTime(double power, int time, boolean speed) {
@@ -581,19 +586,25 @@ public class Robot extends java.lang.Thread {
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //Set power of all motors
+            motor_0.setPower(power);
+            motor_1.setPower(power);
+            motor_2.setPower((-1) * power);
+            motor_3.setPower((-1) * power);
         } else {
             motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            //Set power of all motors
+            motor_0.setPower(power * 1.15);
+            motor_1.setPower(power);
+            motor_2.setPower((-1) * power);
+            motor_3.setPower((-1) * power);
         }
 
 
-        //Set power of all motors
-        motor_0.setPower(power);
-        motor_1.setPower(power);
-        motor_2.setPower((-1) * power);
-        motor_3.setPower((-1) * power);
+
 
         try {
             sleep(time);
@@ -612,12 +623,14 @@ public class Robot extends java.lang.Thread {
         long motor2_end_position = motor_2.getCurrentPosition();
         long motor3_end_position = motor_3.getCurrentPosition();
 
-        Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
-        Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
-        Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
-        Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
+        if (DEBUG_INFO ) {
+            Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
+            Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
+            Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
+            Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
 
-        Log.i(TAG, "Exit Function: moveLeftForTime");
+            Log.i(TAG, "Exit Function: moveLeftForTime");
+        }
     }
 
     // Move Right to specific distance in inches, with power (0 to 1)
