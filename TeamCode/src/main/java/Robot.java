@@ -103,7 +103,7 @@ public class Robot extends java.lang.Thread {
     }
 
     // Come down using encoder moveToPosition and come out of latch
-    public void unlatchUsingEncoderPosition(double power, int direction) {
+    public void unlatchUsingEncoderPosition(double power, int direction, double rotattion) {
         Log.i(TAG, "Enter Function: unlatchUsingEncoderPosition");
         long time = System.currentTimeMillis();
 
@@ -111,7 +111,7 @@ public class Robot extends java.lang.Thread {
         latch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Trial and Error
-        int ticks = (int) (12 * TICKS_PER_ROTATION);
+        int ticks = (int) (rotattion * TICKS_PER_ROTATION);
 
         // Set the target position and power and run to position
         latch.setTargetPosition((direction) * ticks);
@@ -937,7 +937,7 @@ public class Robot extends java.lang.Thread {
         }
     }
 
-    public void wall_align(double power) {
+    public void wall_align(double power, int time) {
         motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -948,7 +948,7 @@ public class Robot extends java.lang.Thread {
         motor_2.setPower(power);
         motor_3.setPower(power);
         try {
-            sleep(2100);
+            sleep(time);
         } catch (Exception e) {
         }
         motor_0.setPower(0);

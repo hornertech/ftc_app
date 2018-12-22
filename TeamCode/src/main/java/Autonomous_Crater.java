@@ -219,7 +219,7 @@ if (test) {
     sleep(1000);
     robot.moveL(1650);
     robot.turn(1,300);
-    robot.wall_align(0.25);
+   // robot.wall_align(0.25);
     robot.pause();
     robot.moveL(130);
     robot.moveF(800);

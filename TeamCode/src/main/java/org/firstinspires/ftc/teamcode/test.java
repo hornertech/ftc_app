@@ -72,9 +72,50 @@ public class test extends LinearOpMode {
             }
 
             case 4: {
-                Log.i(TAG, "ZigZag Coming back to center");
-                robot.moveLeftToPosition(power, distance); //Come back to center, detection failed
-                sleep(sleeptime);
+               Log.i(TAG, "ZigZag Coming back to center");
+               robot.moveLeftToPosition(power, distance); //Come back to center, detection failed
+               sleep(sleeptime);
+                return;
+            }
+
+            default: {
+                // We don't expect this to happen, but return
+                return;
+            }
+
+        }
+    }
+
+    public void move_center(org.firstinspires.ftc.teamcode.Robot robot, int iteration,
+                       int distance, double power) {
+        int sleeptime = 100;
+        switch (iteration) {
+            case 0: {
+                Log.i(TAG, "Already At Center");
+                return;
+            }
+
+            case 1: {
+                Log.i(TAG, "Move Backward to come to center");
+                robot.moveBackwardToPosition(power, distance);
+                return;
+            }
+
+            case 2: {
+                Log.i(TAG, "Move Forward to come to center");
+                robot.moveForwardToPosition(power, distance);
+                return;
+            }
+
+            case 3: {
+                Log.i(TAG, "Move Right to come to center");
+                robot.moveRightToPosition(power, distance); //Move back 2 inches from center
+                return;
+            }
+
+            case 4: {
+                Log.i(TAG, "Move Left to come to center");
+                robot.moveLeftToPosition(power, distance); //Move back 2 inches from center
                 return;
             }
 
@@ -104,11 +145,13 @@ public class test extends LinearOpMode {
                                 Log.i(TAG, "Gold Mineral Found, Lets move it");
                                 telemetry.addData("Gold Mineral", "Detected!");
                                 telemetry.update();
+                                move_center(robot, i, zigzag_distance, zigzag_power);
                                 return GOLD_MINERAL_FOUND;
                             } else {
                                 Log.i(TAG, "Silver Mineral Found, Move ON");
                                 telemetry.addData("Gold Mineral", "Not detected!");
                                 telemetry.update();
+                                move_center(robot, i, zigzag_distance, zigzag_power);
                                 return SILVER_MINERAL_FOUND;
                             }
                         }
@@ -130,6 +173,7 @@ public class test extends LinearOpMode {
                 telemetry.addData("Tfod", "Not Initialized!");
                 telemetry.update();
                 Log.e(TAG, "TFOD Not initialized, returning");
+                move_center(robot, i, zigzag_distance, zigzag_power);
                 return NO_MINERAL_FOUND;
             }
         }
@@ -165,7 +209,7 @@ public class test extends LinearOpMode {
 
         Log.i(TAG, "STEP 1: Come Down and Unlatch");
 
-        robot.unlatchUsingEncoderPosition(1, 1);
+        robot.unlatchUsingEncoderPosition(1, 1, 12);
         robot.moveRightToPosition(1, 4);
         robot.moveBackwardForTime(0.25, 250, false);
         robot.moveForwardToPosition(0.5, 17);
@@ -236,10 +280,11 @@ public class test extends LinearOpMode {
         Log.i(TAG, "STEP 3: Drop Team Marker ");
         robot.moveLeftToPosition(0.8, 43);
         robot.turn(0.6, 900);
-        robot.wall_align(0.25);
+        robot.wall_align(0.25, 1200);
         // robot.pause();
         robot.moveLeftToPosition(0.5, 3);
-        robot.moveForwardToPosition(0.75, 62);
+        //robot.moveForwardToPosition(0.5, 62);
+        robot.moveForwardForTime(1, 1800, true);
         sleep(1000);
 
         time_taken = System.currentTimeMillis() - start_time;
@@ -250,7 +295,7 @@ public class test extends LinearOpMode {
         robot.moveBackwardToPosition(1, 72);
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 4: Completed after : " + time_taken + "Milli Seconds");
-        robot.unlatchUsingEncoderPosition(1, -1);
+        robot.unlatchUsingEncoderPosition(1, -1, 11.8);
 
         if (tfod != null) {
             tfod.shutdown();

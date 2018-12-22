@@ -165,10 +165,10 @@ public class test_depot extends LinearOpMode {
 
         Log.i(TAG, "STEP 1: Come Down and Unlatch");
 
-        robot.unlatchUsingEncoderPosition(1, 1);
-        robot.moveRightToPosition(1, 4);
-        robot.moveBackwardForTime(0.25, 250, false);
-        robot.moveForwardToPosition(0.5, 17);
+        robot.unlatchUsingEncoderPosition(1, 1, 12);
+        robot.moveRightToPosition(1, 4); //come out of latch
+        robot.moveBackwardForTime(0.25, 250, false); //align to back wall
+        robot.moveForwardToPosition(0.5, 17);  //Move forward to detect
 
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
@@ -216,7 +216,7 @@ public class test_depot extends LinearOpMode {
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
                 if (debugOn == true) sleep(5000);
-                //Move left 232 in.
+                //Move left 32 in.
                 robot.moveLeftToPosition(0.5, 32);
                 //Knock off mineral
                 robot.moveForwardToPosition(0.5, 14);
@@ -236,7 +236,7 @@ public class test_depot extends LinearOpMode {
         Log.i(TAG, "STEP 3: Drop Team Marker ");
         robot.moveLeftToPosition(0.8, 43);
         robot.turn(0.6, 900);
-        robot.wall_align(0.25);
+        robot.wall_align(0.25, 1500);
         // robot.pause();
         robot.moveLeftToPosition(0.5, 3);
         robot.moveForwardToPosition(0.75, 62);
@@ -250,7 +250,7 @@ public class test_depot extends LinearOpMode {
         robot.moveBackwardToPosition(1, 72);
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 4: Completed after : " + time_taken + "Milli Seconds");
-        robot.unlatchUsingEncoderPosition(1, -1);
+        robot.unlatchUsingEncoderPosition(1, -1, 12.5);
 
         if (tfod != null) {
             tfod.shutdown();
