@@ -45,14 +45,14 @@ public class test extends LinearOpMode {
             case 0: {
                 Log.i(TAG, "ZigZag Moving Forward");
                 robot.moveForwardToPosition(power, distance); //Move forward 2 inch from center
-                sleep(sleeptime);
+              //  sleep(sleeptime);
                 return;
             }
 
             case 1: {
                 Log.i(TAG, "ZigZag Moving Backward");
                 robot.moveBackwardToPosition(power, 2 * distance); //Move back 2 inches from center
-                sleep(sleeptime);
+              //  sleep(sleeptime);
                 return;
             }
 
@@ -60,21 +60,21 @@ public class test extends LinearOpMode {
                 Log.i(TAG, "ZigZag Moving Left");
                 robot.moveForwardToPosition(power, distance); //Come to center
                 robot.moveLeftToPosition(power, distance); //Move Left 2 inches from center
-                sleep(sleeptime);
+              //  sleep(sleeptime);
                 return;
             }
 
             case 3: {
                 Log.i(TAG, "ZigZag Moving Right");
                 robot.moveRightToPosition(power, 2 * distance); // Move 2 inches right from center
-                sleep(sleeptime);
+              //  sleep(sleeptime);
                 return;
             }
 
             case 4: {
                Log.i(TAG, "ZigZag Coming back to center");
                robot.moveLeftToPosition(power, distance); //Come back to center, detection failed
-               sleep(sleeptime);
+             //  sleep(sleeptime);
                 return;
             }
 
@@ -213,7 +213,7 @@ public class test extends LinearOpMode {
     robot.moveRightToPosition(1, 4);
     robot.moveBackwardForTime(0.25, 250, false);
     robot.moveForwardToPosition(0.5, 17);
-    robot.moveLeftToPosition(0.5, 4);
+    robot.moveLeftForTime(0.5, 300, false);
 
     time_taken = System.currentTimeMillis() - start_time;
     Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
@@ -229,80 +229,88 @@ public class test extends LinearOpMode {
         Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
         //Knock off mineral
         robot.moveForwardToPosition(0.5, 14);
-        robot.pause();
+        //robot.pause();
         robot.moveBackwardToPosition(0.5, 14);
 
     } else if (detect_result == NO_MINERAL_FOUND) {
         Log.i(TAG, "Detection Problem at center : Still Knocking off");
         //for time being knock off the mineral
         robot.moveForwardToPosition(0.5, 14);
-        robot.pause();
+       // robot.pause();
         robot.moveBackwardToPosition(0.5, 14);
     } else {//Move right 14.5 in.
         Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-        robot.moveRightForTime(0.5, 1000, false);
+        robot.moveRightForTime(0.5, 1200, false);
         detect_result = detectOnceNew(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
             //Knock off mineral
             robot.moveForwardToPosition(0.5, 14);
-            robot.pause();
+           // robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveLeftForTime(0.5, 1000, false);
+            robot.moveLeftForTime(0.5, 1100, false);
         } else if (detect_result == NO_MINERAL_FOUND) {
             Log.i(TAG, "Detection Problem at right location : Still Knocking off");
             //Knock off mineral
             robot.moveForwardToPosition(0.5, 14);
-            robot.pause();
+          //  robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveLeftForTime(0.5, 1000, false);
+            robot.moveLeftForTime(0.5, 1100, false);
         } else { // Knock of Leftmost Mineral
             Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
               //Move left 232 in.
             robot.moveLeftForTime(0.75, 1700, false);
             //Knock off mineral
             robot.moveForwardToPosition(0.5, 14);
-            robot.pause();
+          //  robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
 
             //Come Back to Center
-            robot.moveRightForTime(0.7, 900, false);
+            robot.moveRightForTime(0.7, 950, false);
         }
     }
     time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 2: Completed after : " + time_taken + "Milli Seconds");
+    Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
     //End step 2
 
 
     //Begin step 3
     //Add wall alignment here
     Log.i(TAG, "STEP 3: Drop Team Marker ");
-    robot.moveLeftForTime(0.8, 2100, false);
-    robot.turn(0.6, 1000);
-    robot.wall_align(0.2, 1200);
-    // robot.pause();
-    robot.moveLeftToPosition(0.5, 3);
+    robot.moveLeftForTime(0.8, 2000, false);
+    robot.turnForTime(0.6, 1000, false, 1);
 
+        robot.wall_align(0.2, 1200);
+        // robot.pause();
+        robot.moveLeftToPosition(0.5, 3);
+        robot.moveForwardForTime(1, 1200, true);
 
-    //robot.moveForwardToPosition(0.5, 62);
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
-    robot.moveForwardForTime(1, 1400, true);
-    sleep(1000);
-
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 3: Completed after : " + time_taken + "Milli Seconds");
         robot.unlatchUsingEncoderPosition(1, -1, 12);
 
-    Log.i(TAG, "STEP 4: Park At Crater ");
-    //Begin Step 4
-    robot.moveBackwardToPosition(1, 75);
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 4: Completed after : " + time_taken + "Milli Seconds");
+        if (test) {
+        //robot.moveForwardToPosition(0.5, 62);
+
+
+        sleep(1000);
 
 
 
+
+        Log.i(TAG, "STEP 4: Park At Crater ");
+        //Begin Step 4
+        robot.moveBackwardToPosition(1, 75);
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
+
+
+
+    }
+      //  robot.turnForTime(0.5, 1100, false, 1);
         if (tfod != null) {
             tfod.shutdown();
         }
