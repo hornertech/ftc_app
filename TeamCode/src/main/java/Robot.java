@@ -712,8 +712,8 @@ public class Robot extends java.lang.Thread {
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //Set power of all motors
             motor_0.setPower((-1) * power);
-            motor_1.setPower((-1) * power * 1.7);
-            motor_2.setPower(power * 0.6);
+            motor_1.setPower((-1) * power);
+            motor_2.setPower(power);
             motor_3.setPower(power);
         }
 
@@ -764,9 +764,9 @@ public class Robot extends java.lang.Thread {
             motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //Set power of all motors
-            motor_0.setPower(power * 1.2);
-            motor_1.setPower(power * 1.6);
-            motor_2.setPower((-1) * power * 0.5);
+            motor_0.setPower(power);
+            motor_1.setPower(power );
+            motor_2.setPower((-1) * power);
             motor_3.setPower((-1) * power);
         }
 
@@ -1002,9 +1002,9 @@ public class Robot extends java.lang.Thread {
     public void moveR(long distance) {
         double power = 0.6;
 
-        motor_0.setPower(power * 1.2);
-        motor_1.setPower(power * 1.6);
-        motor_2.setPower((-1) * power * 0.5);
+        motor_0.setPower(power );
+        motor_1.setPower(power);
+        motor_2.setPower((-1) * power);
         motor_3.setPower((-1) * power);
         try {
             sleep(distance * movementFactor);
@@ -1023,8 +1023,8 @@ public class Robot extends java.lang.Thread {
         double power = 0.6;
 
         motor_0.setPower((-1) * power);
-        motor_1.setPower((-1) * power * 1.6);
-        motor_2.setPower(power * 0.6);
+        motor_1.setPower((-1) * power);
+        motor_2.setPower(power );
         motor_3.setPower(power);
 
         try {
@@ -1298,7 +1298,7 @@ public class Robot extends java.lang.Thread {
     public void releaseMineral(int time) {
         grabber_1.setPower(0.75);
         try {
-            sleep(time * 1000);
+            sleep(time * 100);
         } catch (Exception e) {
         }
         grabber_1.setPower(0);

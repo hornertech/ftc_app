@@ -81,15 +81,24 @@ public class TeleopTest extends LinearOpMode{
             if (this.gamepad1.x == true) {
                 telemetry.addData("Grabber", "Moving Down");
                 telemetry.update();
-                robot.moveLeftForTime(0.5, 2000, false);
+                robot.moveLeftForTime(0.5, 2000, true);
             }
 
             if (this.gamepad1.b == true) {
                 telemetry.addData("Grabber", "Moving Down");
                 telemetry.update();
-                robot.moveRightForTime(0.5, 2000, false);
+                robot.moveRightForTime(0.5, 2000, true);
             }
-
+            if (this.gamepad1.y == true) {
+                telemetry.addData("Grabber", "Moving Down");
+                telemetry.update();
+                robot.moveForwardForTime(1, 1000, true);
+            }
+            if (this.gamepad1.a == true) {
+                telemetry.addData("Grabber", "Moving Down");
+                telemetry.update();
+                robot.moveBackwardForTime(1, 1000, true);
+            }
 
             if (this.gamepad2.x == true) {
                 telemetry.addData("Grabber", "Moving Down");
@@ -97,25 +106,25 @@ public class TeleopTest extends LinearOpMode{
                 robot.grabberExtendSlide(0.5, 1, 800, 9000);
             }
 
-            if (this.gamepad2.right_stick_y > 0.2) {
+            if (this.gamepad2.right_stick_y > 0.5) {
                 telemetry.addData("Grabber", "Moving UP");
                 telemetry.update();
                 robot.grabberRotatorMoveTime(0.5, 50);
             }
 
-            if (this.gamepad2.right_stick_y < -0.2) {
+            if (this.gamepad2.right_stick_y < -0.5) {
                 telemetry.addData("Grabber", "Moving Down");
                 telemetry.update();
                 robot.grabberRotatorMoveTime(-0.5, 50);
             }
 
-            if (this.gamepad2.left_stick_x > 0.2) {
+            if (this.gamepad2.left_stick_x > 0.5) {
                 telemetry.addData("Grabber", "Extending");
                 telemetry.update();
                 robot.grabberSlideMoveTime(-1, 50);
             }
 
-            if (this.gamepad2.left_stick_x < -0.2) {
+            if (this.gamepad2.left_stick_x < -0.5) {
                 telemetry.addData("Grabber", "Contracting");
                 telemetry.update();
                 robot.grabberSlideMoveTime(1, 50);

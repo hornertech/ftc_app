@@ -37,7 +37,6 @@ public class test_depot extends LinearOpMode {
     private VuforiaLocalizer vuforia;
 
     private TFObjectDetector tfod;
-
     public void ZigZag(org.firstinspires.ftc.teamcode.Robot robot, int iteration,
                        int distance, double power) {
         int sleeptime = 100;
@@ -207,7 +206,8 @@ public class test_depot extends LinearOpMode {
                 robot.moveLeftToPosition(0.5, 16);
             } else if (detect_result == NO_MINERAL_FOUND) {
                 Log.i(TAG, "Detection Problem at right location : Still Knocking off");
-                //Knock off mineral
+                //Knock off minera
+                // l
                 robot.moveForwardToPosition(0.5, 14);
                 robot.pause();
                 robot.moveBackwardToPosition(0.5, 14);

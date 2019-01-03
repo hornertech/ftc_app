@@ -37,6 +37,7 @@ public class Autonomous_Depot extends LinearOpMode {
      * Detection Code
      * @return
      */
+    /*
     public boolean detectOnce() {
         while (opModeIsActive()) {
             /* detectionCount ++;
@@ -44,7 +45,7 @@ public class Autonomous_Depot extends LinearOpMode {
                 telemetry.addData("Gold Mineral", "Not detected!");
                 telemetry.update();
                 return false;
-            } */
+            } *//*
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
@@ -72,17 +73,20 @@ public class Autonomous_Depot extends LinearOpMode {
     /**
      * Main Mathod
      */
-    public void runOpMode() {
-        initVuforia();
 
-        initTfod();
+    public void runOpMode() {
+
+    }
+     //   initVuforia();
+
+        //initTfod();
 
         org.firstinspires.ftc.teamcode.Robot robot = new org.firstinspires.ftc.teamcode.Robot (hardwareMap, telemetry);
-        //robot.isTeleOp = false;
+        /*//robot.isTeleOp = false;
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         waitForStart();
-
+        /*
         if (opModeIsActive()) {
             if (tfod != null) {
                 tfod.activate();

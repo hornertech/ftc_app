@@ -231,16 +231,16 @@ public class test extends LinearOpMode {
         robot.moveForwardToPosition(0.5, 14);
         //robot.pause();
         robot.moveBackwardToPosition(0.5, 14);
-
     } else if (detect_result == NO_MINERAL_FOUND) {
         Log.i(TAG, "Detection Problem at center : Still Knocking off");
         //for time being knock off the mineral
         robot.moveForwardToPosition(0.5, 14);
        // robot.pause();
         robot.moveBackwardToPosition(0.5, 14);
+
     } else {//Move right 14.5 in.
         Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-        robot.moveRightForTime(0.5, 1200, false);
+        robot.moveRightForTime(0.7, 900, true);
         detect_result = detectOnceNew(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
@@ -249,7 +249,7 @@ public class test extends LinearOpMode {
            // robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveLeftForTime(0.5, 1100, false);
+            robot.moveLeftForTime(0.7, 850, true);
         } else if (detect_result == NO_MINERAL_FOUND) {
             Log.i(TAG, "Detection Problem at right location : Still Knocking off");
             //Knock off mineral
@@ -257,18 +257,19 @@ public class test extends LinearOpMode {
           //  robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
             //Come back to center
-            robot.moveLeftForTime(0.5, 1100, false);
+            robot.moveLeftForTime(0.7, 850, true);
         } else { // Knock of Leftmost Mineral
             Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
               //Move left 232 in.
-            robot.moveLeftForTime(0.75, 1700, false);
+
+            robot.moveLeftForTime(0.5, 2000, true);
             //Knock off mineral
             robot.moveForwardToPosition(0.5, 14);
           //  robot.pause();
             robot.moveBackwardToPosition(0.5, 14);
 
             //Come Back to Center
-            robot.moveRightForTime(0.7, 950, false);
+            robot.moveRightForTime(0.6, 950, true);
         }
     }
     time_taken = System.currentTimeMillis() - start_time;
@@ -279,38 +280,26 @@ public class test extends LinearOpMode {
     //Begin step 3
     //Add wall alignment here
     Log.i(TAG, "STEP 3: Drop Team Marker ");
-    robot.moveLeftForTime(0.8, 2000, false);
-    robot.turnForTime(0.6, 1000, false, 1);
+    robot.turnForTime(0.6, 700, false, 1);
+    robot.moveForwardToPosition(1, 47);
+    robot.turnForTime(0.6, 300, false, 1);
 
-        robot.wall_align(0.2, 1200);
+        robot.wall_align(0.3, 1100);
         // robot.pause();
-        robot.moveLeftToPosition(0.5, 3);
-        robot.moveForwardForTime(1, 1200, true);
-
+        robot.moveLeftForTime(0.5, 300, true);
+        robot.moveForwardForTime(1, 800, true);
+        robot.grabberRotatorMoveTime(1, 500);
+        robot.releaseMineral(6);
+        robot.grabberRotatorMoveTime(-1, 600);
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
-        robot.unlatchUsingEncoderPosition(1, -1, 12);
-
-        if (test) {
-        //robot.moveForwardToPosition(0.5, 62);
-
-
-        sleep(1000);
-
-
-
-
         Log.i(TAG, "STEP 4: Park At Crater ");
         //Begin Step 4
-        robot.moveBackwardToPosition(1, 75);
+        robot.moveBackwardForTime(1, 2450, true);
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
 
-
-
-    }
-      //  robot.turnForTime(0.5, 1100, false, 1);
         if (tfod != null) {
             tfod.shutdown();
         }
