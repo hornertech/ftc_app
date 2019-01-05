@@ -1180,6 +1180,7 @@ public class Robot extends java.lang.Thread {
         }
     }
 
+    //CLEANUP: remove this and use moveLeft/RightForTime
     public void wall_align(double power, int time) {
         motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -1200,89 +1201,6 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(0);
     }
 
-    public void wall_align_back(double power, int time) {
-        //Set Motors to RUN_TO_POSITION
-        motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        motor_0.setPower(-1 * power);
-        motor_1.setPower(power);
-        motor_2.setPower(-1 * power);
-        motor_3.setPower(power);
-        try {
-            sleep(time);
-        } catch (Exception e) {
-        }
-        motor_0.setPower(0);
-        motor_1.setPower(0);
-        motor_2.setPower(0);
-        motor_3.setPower(0);
-    }
-
-    //The following two methods were removed due to the fact that we removed the grabber.
-    /*public void moveG (long distance) {
-        if (distance > 0) {
-            motor_4.setPower(-1);
-            try {
-                sleep(distance * grabberFactor);
-            } catch (Exception e) {}
-            motor_4.setPower(0);
-        } else {
-            motor_4.setPower(1);
-            try {
-                sleep(-1 * distance * grabberFactor);
-            } catch (Exception e) {}
-            motor_4.setPower(0);
-        }
-    }
-
-    public void grab() {
-        grabber_1.setPower(1);
-        try {
-            sleep(2000);
-        } catch (Exception e) {}
-        grabber_1.setPower(0);
-    } */
-
-
-    public void slide(long distance) {
-        if (distance >= 0) {
-            motor_5.setPower(1);
-            try {
-                sleep(distance * slideFactor);
-            } catch (Exception e) {
-            }
-            motor_5.setPower(0);
-        } else {
-            motor_5.setPower(-1);
-            try {
-                sleep(-1 * distance * slideFactor);
-            } catch (Exception e) {
-            }
-            motor_5.setPower(0);
-        }
-    }
-
-    public void unlatch() {
-        latch.setPower(-1);
-        try {
-            sleep(100);
-        } catch (Exception e) {
-        }
-        latch.setPower(0);
-    }
-
-    public void drop_marker() {
-        teammarker.setPower(1);
-        try {
-            sleep(400);
-            teammarker.setPower(0);
-        } catch (Exception e) {
-        }
-    }
-
     public void grabMineral(int time) {
         grabber_1.setPower(-0.75);
         try {
@@ -1301,24 +1219,6 @@ public class Robot extends java.lang.Thread {
         } catch (Exception e) {
         }
         grabber_1.setPower(0);
-    }
-
-
-    public void hold_slide() {
-        holder.setPower(1);
-        try {
-            sleep(50);
-        } catch (Exception e) {
-        }
-    }
-
-    public void relatch() {
-        latch.setPower(-1);
-        try {
-            sleep(100);
-        } catch (Exception e) {
-        }
-
     }
 
     public void pause(long sleep) {
