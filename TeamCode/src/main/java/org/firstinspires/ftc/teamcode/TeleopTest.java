@@ -79,77 +79,77 @@ public class TeleopTest extends LinearOpMode{
             }
 
             if (this.gamepad1.x == true) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Robot-Testing ", "Moving Left");
                 telemetry.update();
                 robot.moveLeftForTime(0.5, 2000, true);
             }
 
             if (this.gamepad1.b == true) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Robot-Testing ", "Moving Right");
                 telemetry.update();
                 robot.moveRightForTime(0.5, 2000, true);
             }
             if (this.gamepad1.y == true) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Robot-Testing ", "Moving Forward");
                 telemetry.update();
                 robot.moveForwardForTime(1, 1000, true);
             }
             if (this.gamepad1.a == true) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Robot-Testing ", "Moving Backward");
                 telemetry.update();
                 robot.moveBackwardForTime(1, 1000, true);
             }
 
             if (this.gamepad2.x == true) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Grabber", "Extending");
                 telemetry.update();
                 robot.grabberExtendSlide(0.5, 1, 800, 9000);
             }
 
             if (this.gamepad2.right_stick_y > 0.5) {
-                telemetry.addData("Grabber", "Moving UP");
+                telemetry.addData("Grabber-Rotator", "Moving UP");
                 telemetry.update();
                 robot.grabberRotatorMoveTime(0.5, 50);
             }
 
             if (this.gamepad2.right_stick_y < -0.5) {
-                telemetry.addData("Grabber", "Moving Down");
+                telemetry.addData("Grabber-Rotator", "Moving Down");
                 telemetry.update();
                 robot.grabberRotatorMoveTime(-0.5, 50);
             }
 
             if (this.gamepad2.left_stick_x > 0.5) {
-                telemetry.addData("Grabber", "Extending");
+                telemetry.addData("Grabber-Slide", "Extending");
                 telemetry.update();
                 robot.grabberSlideMoveTime(-1, 50);
             }
 
             if (this.gamepad2.left_stick_x < -0.5) {
-                telemetry.addData("Grabber", "Contracting");
+                telemetry.addData("Grabber-Slide", "Contracting");
                 telemetry.update();
                 robot.grabberSlideMoveTime(1, 50);
             }
 
             if (this.gamepad2.left_bumper == true) {
-                telemetry.addData("Grabber", "Releasing");
+                telemetry.addData("Grabber-Noddles", "Releasing");
                 telemetry.update();
                 robot.releaseMineral(1);
             }
 
             if (this.gamepad2.right_bumper == true) {
-                telemetry.addData("Grabber", "Noodles Moving");
+                telemetry.addData("Grabber-Noddles", "Grabbing");
                 telemetry.update();
                 robot.grabMineral(1);
             }
 
             if (this.gamepad1.dpad_up == true) {
-                telemetry.addData("TeleOP", "New Code");
+                telemetry.addData("Latch", "Extending");
                 telemetry.update();
                 robot.latch.setPower(1);
                 sleep(100);
                 robot.latch.setPower(0);
             } else if (this.gamepad1.dpad_down == true) {
-                telemetry.addData("TeleOP", "New Code");
+                telemetry.addData("Latch", "Contracting");
                 telemetry.update();
                 robot.latch.setPower(-1);
                 sleep(100);

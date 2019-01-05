@@ -43,7 +43,7 @@ public class Robot extends java.lang.Thread {
     public boolean isTeleOp = true;
     public int inverse = 1;
     public boolean DEBUG_DEBUG = false;
-    public boolean DEBUG_INFO = true;
+    public boolean DEBUG_INFO = false;
 
     public long movementFactor = 1;
     public long slideFactor = 1;
@@ -227,7 +227,6 @@ public class Robot extends java.lang.Thread {
     }
 
     public void grabberRotatorMoveTime(double power, int time) {
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         grabber_rotater.setPower(power);
 
         try {
@@ -849,14 +848,14 @@ public class Robot extends java.lang.Thread {
         long motor2_end_position = motor_2.getCurrentPosition();
         long motor3_end_position = motor_3.getCurrentPosition();
 
-       // if (DEBUG_INFO ) {
+        if (DEBUG_INFO ) {
             Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
             Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
             Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
             Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
 
             Log.i(TAG, "Exit Function: turnForTime");
-        //}
+        }
     }
 
     // Move Right to specific distance in inches, with power (0 to 1)
