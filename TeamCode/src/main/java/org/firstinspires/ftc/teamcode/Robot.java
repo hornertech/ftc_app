@@ -20,37 +20,24 @@ public class Robot extends java.lang.Thread {
     private static final int WHEEL_DIAMETER = 6; //Wheel diameter in inches
     public String TAG = "FTC_APP";
 
-    public Gyroscope imu;
-
-    public CRServo holder;
     public DcMotor motor_0;
     public DcMotor motor_1;
     public DcMotor motor_2;
     public DcMotor motor_3;
-    public DcMotor motor_4;
-    public DcMotor motor_5;
-    public DcMotor motor_6;
+
     public DcMotor latch;
     public DcMotor grabber_rotater;
     public DcMotor grabber_slide;
     public DcMotor grabber_1;
 
-    public CRServo teammarker;
     public ElapsedTime mRuntime;
 
-
-    public boolean debugOn = false;
     public boolean isTeleOp = true;
-    public int inverse = 1;
     public boolean DEBUG_DEBUG = false;
     public boolean DEBUG_INFO = false;
 
     public long movementFactor = 1;
-    public long slideFactor = 1;
-    public long grabberFactor = 1;
     public long turnFactor = 1;
-    private boolean detect = true; // For debugging purpose
-
 
     Robot(HardwareMap map, Telemetry tel) {
         hardwareMap = map;
@@ -83,20 +70,7 @@ public class Robot extends java.lang.Thread {
         return (encoder_ticks);
     }
 
-    // This function takes input Angle (in degrees)  and it will return Motor ticks needed
-    // to make that Turn2
-    public int AngleToTick(double angle) {
-        Log.i(TAG, "Enter FUNC: AngleToTick");
-
-        int encoder_ticks = (int) ((java.lang.Math.abs(angle) * TICKS_PER_ROTATION * 2.75) / 360);
-
-        Log.i(TAG, "Ticks needed for Angle : " + encoder_ticks);
-        Log.i(TAG, "Exit FUNC: AngleToTick");
-
-        return (encoder_ticks);
-    }
-
-    // Come down using encoder moveToPosition and come out of latch
+     // Come down using encoder moveToPosition and come out of latch
     public void unlatchUsingEncoderPosition(double power, int direction, double rotattion) {
         Log.i(TAG, "Enter Function: unlatchUsingEncoderPosition");
         long time = System.currentTimeMillis();
@@ -128,196 +102,18 @@ public class Robot extends java.lang.Thread {
         Log.i(TAG, "Exit Function: unlatchUsingEncoderPosition");
     }
 
-    // Come down using encoder speed and come out of latch
-    public void unlatchUsingEncoderSpeed(double power) {
-        Log.i(TAG, "Enter Function: unlatchUsingEncoderSpeed");
-        Log.i(TAG, "Starting decent at : " + System.currentTimeMillis());
-
-        latch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        latch.setPower(power);
-
-        try {
-            sleep(4000);
-        } catch (Exception e) {
-        }
-
-        //Reached the distance, so stop the motors
-        latch.setPower(0);
-
-        Log.i(TAG, "Completed decent at : " + System.currentTimeMillis());
-        Log.i(TAG, "Exit Function: unlatchUsingEncoderSpeed");
-    }
-
-    public void grabberUpPosition() {
-        Log.i(TAG, "Enter Function: grabberUpPosition");
-
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setPower(1);
-        grabber_rotater.setTargetPosition(-600);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Moving");
-            telemetry.update();
-        }
-
-        grabber_rotater.setPower(0);
-/*
-        grabber_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        grabber_slide.setPower(0.75);
-        grabber_rotater.setPower(0.5);
-
-        grabber_slide.setTargetPosition(-1000);
-        grabber_rotater.setTargetPosition(-200);
-
-        grabber_slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy() || grabber_slide.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Moving");
-            telemetry.update();
-        }
-
-        grabber_slide.setPower(0);
-        grabber_rotater.setPower(0); */
-    }
-
-    public void grabberDownPosition() {
-        Log.i(TAG, "Enter Function: grabberUpPosition");
-
-        grabber_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        grabber_slide.setPower(0.75);
-        grabber_rotater.setPower(0.5);
-
-        grabber_slide.setTargetPosition(1000);
-        grabber_rotater.setTargetPosition(1200);
-
-        grabber_slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy() || grabber_slide.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Moving");
-            telemetry.update();
-        }
-
-        grabber_slide.setPower(0);
-        grabber_rotater.setPower(0);
-    }
-
-
-    public void grabberRotatorMovePosition(double power, int position) {
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setPower(power);
-        grabber_rotater.setTargetPosition(position);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Extending");
-        }
-
-        grabber_rotater.setPower(0);
-    }
-
-    public void grabberRotatorMoveTime(double power, int time) {
-        grabber_rotater.setPower(power);
-
-        try {
-            sleep(time);
-        } catch (Exception e) {
-        }
-
-        grabber_rotater.setPower(0);
-    }
-
-    public void grabberSlideMovePosition(double power, int position) {
-        grabber_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_slide.setPower(power);
-        grabber_slide.setTargetPosition(position);
-        grabber_slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_slide.isBusy()) {
-            telemetry.addData("Grabber", "Extending");
-            telemetry.update();
-        }
-
-        grabber_slide.setPower(0);
-    }
-
-    public void grabberSlideMoveTime(double power, int time) {
-        grabber_slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        grabber_slide.setPower(power);
-
-        try {
-            sleep(time);
-        } catch (Exception e) {
-        }
-
-        grabber_slide.setPower(0);
-    }
-
-
-    public void grabberExtendSlide(double   rotator_power,
-                                   double   slide_power,
-                                   int      rotator_position,
-                                   int      slide_position) {
-        grabberRotatorMovePosition(rotator_power, rotator_position);
-        grabberSlideMovePosition(slide_power, slide_position);
-    }
-
-    public void grabberDrop() {
-        Log.i(TAG, "Enter Function: grabberDrop");
-
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setPower(0.2);
-        grabber_rotater.setTargetPosition(-600);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Extending");
-            telemetry.update();
-
-            Log.i(TAG, "Moving Ticks Grabber-Rotator : " + grabber_rotater.getCurrentPosition());
-        }
-
-        grabber_rotater.setPower(0);
-
-        Log.i(TAG, "Final Ticks Grabber-Rotator : " + grabber_rotater.getCurrentPosition());
-
-    }
-
-    public void grabberGrab() {
-        Log.i(TAG, "Enter Function: grabberDrop");
-
-        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber_rotater.setPower(0.1);
-        grabber_rotater.setTargetPosition(400);
-        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (grabber_rotater.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Grabber", "Extending");
-            telemetry.update();
-
-            Log.i(TAG, "Moving Ticks Grabber-Rotator : " + grabber_rotater.getCurrentPosition());
-        }
-
-        grabber_rotater.setPower(0);
-
-        Log.i(TAG, "Final Ticks Grabber-Rotator : " + grabber_rotater.getCurrentPosition());
-
-    }
-
-
-    // Move forward to specific distance in inches, with power (0 to 1)
+    /*****************************************************************************/
+    /* Section:      Move to specific distance functions                         */
+    /*                                                                           */
+    /* Purpose:    Used for moving motor specific inches                         */
+    /*                                                                           */
+    /* Returns:   Nothing                                                        */
+    /*                                                                           */
+    /* Params:    IN     power         - Speed  (-1 to 1)                        */
+    /*            IN     distance      -  in inches                              */
+    /*                                                                           */
+    /*****************************************************************************/
+     // Move forward to specific distance in inches, with power (0 to 1)
     public void moveForwardToPosition(double power, int distance) {
         Log.i(TAG, "Enter Function: moveForwardToPosition Power : " + power + " and distance : " + distance);
         // Reset all encoders
@@ -575,10 +371,7 @@ public class Robot extends java.lang.Thread {
     /* Params:    IN     power         - Speed  (-1 to 1)                        */
     /*            IN     time          - Time in MilliSeconds                    */
     /*                                                                           */
-
-    /**
-     * PROC-
-     **********************************************************************/
+    /*****************************************************************************/
     // Move forward for specific time in milliseconds, with power (0 to 1)
     public void moveForwardForTime(double power, int time, boolean speed) {
         Log.i(TAG, "Enter Function: moveForwardForTime Power : " + power + " and time : " + time + "Speed : " + speed);
@@ -600,7 +393,6 @@ public class Robot extends java.lang.Thread {
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-
         //Set power of all motors
         motor_0.setPower(power);
         motor_1.setPower((-1) * power);
@@ -611,7 +403,6 @@ public class Robot extends java.lang.Thread {
             sleep(time);
         } catch (Exception e) {
         }
-
 
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
@@ -653,7 +444,6 @@ public class Robot extends java.lang.Thread {
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-
         //Set power of all motors
         motor_0.setPower((-1) * power);
         motor_1.setPower(power);
@@ -664,7 +454,6 @@ public class Robot extends java.lang.Thread {
             sleep(time);
         } catch (Exception e) {
         }
-
 
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
@@ -774,7 +563,6 @@ public class Robot extends java.lang.Thread {
         } catch (Exception e) {
         }
 
-
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
         motor_1.setPower(0);
@@ -827,15 +615,10 @@ public class Robot extends java.lang.Thread {
             motor_2.setPower(orientation * power);
             motor_3.setPower(orientation * power * 1.5);
         }
-
-
-
-
         try {
             sleep(time);
         } catch (Exception e) {
         }
-
 
         //Reached the distance, so stop the motors
         motor_0.setPower(0);
@@ -856,70 +639,6 @@ public class Robot extends java.lang.Thread {
 
             Log.i(TAG, "Exit Function: turnForTime");
         }
-    }
-
-    // Move Right to specific distance in inches, with power (0 to 1)
-    public void turnNew(double power, int angle) {
-        Log.i(TAG, "Enter Function: moveRight Power : " + power + " and angle : " + angle);
-
-        int orientation = 1;
-        if (angle > 0) {
-            Log.i(TAG, "Turning Clockwise");
-        } else {
-            orientation = -1;
-            Log.i(TAG, "Turning Anti-Clockwise");
-        }
-        try {
-            sleep(1000);
-        } catch (Exception e) {
-        }
-        // Reset all encoders
-        motor_0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor_3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Find the motor ticks needed to travel the required distance
-        int ticks = AngleToTick(angle);
-
-        // Set the target position for all motors (in ticks)
-        motor_0.setTargetPosition(orientation * ticks);
-        motor_1.setTargetPosition(orientation * ticks);
-        motor_2.setTargetPosition(orientation * ticks);
-        motor_3.setTargetPosition(orientation * ticks);
-
-        //Set power of all motors
-        motor_0.setPower(power);
-        motor_1.setPower(power);
-        motor_2.setPower(power);
-        motor_3.setPower(power);
-
-        //Set Motors to RUN_TO_POSITION
-        motor_0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Wait for them to reach to the position
-        while (motor_0.isBusy() || motor_1.isBusy() || motor_2.isBusy() || motor_3.isBusy()) {
-            //Waiting for Robot to travel the distance
-            telemetry.addData("Turning", "Moving");
-            telemetry.update();
-        }
-
-
-        //Reached the distance, so stop the motors
-        motor_0.setPower(0);
-        motor_1.setPower(0);
-        motor_2.setPower(0);
-        motor_3.setPower(0);
-
-        Log.i(TAG, "TICKS needed : " + ticks);
-        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
-        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
-        Log.i(TAG, "Exit Function: turnNew");
     }
 
     public void moveB(long distance) {
@@ -947,44 +666,6 @@ public class Robot extends java.lang.Thread {
         motor_1.setPower(-0.5);
         motor_2.setPower(0.5);
         motor_3.setPower(-0.5);
-        try {
-            sleep(distance * movementFactor);
-        } catch (Exception e) {
-        }
-        motor_0.setPower(0);
-        motor_1.setPower(0);
-        motor_2.setPower(0);
-        motor_3.setPower(0);
-        telemetry.addData("Direction", "Backward");
-        telemetry.update();
-        if (isTeleOp == false) pause(250);
-    }
-
-    public void tmoveB(long distance) {
-        telemetry.addData("Direction", "Forward");
-        telemetry.update();
-        motor_0.setPower(-0.25);
-        motor_1.setPower(0.25);
-        motor_2.setPower(-0.25);
-        motor_3.setPower(0.25);
-        try {
-            sleep(distance * movementFactor);
-        } catch (Exception e) {
-        }
-        motor_0.setPower(0);
-        motor_1.setPower(0);
-        motor_2.setPower(0);
-        motor_3.setPower(0);
-        telemetry.addData("Direction", "Forward");
-        telemetry.update();
-        if (isTeleOp == false) pause(250);
-    }
-
-    public void tmoveF(long distance) {
-        motor_0.setPower(0.25);
-        motor_1.setPower(-0.25);
-        motor_2.setPower(0.25);
-        motor_3.setPower(-0.25);
         try {
             sleep(distance * movementFactor);
         } catch (Exception e) {
@@ -1103,45 +784,6 @@ public class Robot extends java.lang.Thread {
         if (isTeleOp == false) pause(250);
     }
 
-    public void turn(double power, long angle) {
-        motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        if (angle > 0) {
-            motor_0.setPower(power);
-            motor_1.setPower(power);
-            motor_2.setPower(power);
-            motor_3.setPower(power);
-            try {
-                sleep(angle * turnFactor);
-            } catch (Exception e) {
-            }
-            motor_0.setPower(0);
-            motor_1.setPower(0);
-            motor_2.setPower(0);
-            motor_3.setPower(0);
-            pause();
-            pause();
-        } else {
-            motor_0.setPower(-1 * power);
-            motor_1.setPower(-1 * power);
-            motor_2.setPower(-1 * power);
-            motor_3.setPower(-1 * power);
-            try {
-                sleep(angle * -turnFactor);
-            } catch (Exception e) {
-            }
-            motor_0.setPower(0);
-            motor_1.setPower(0);
-            motor_2.setPower(0);
-            motor_3.setPower(0);
-            pause();
-            pause();
-        }
-    }
-
     public void slow_turn(long angle) {
         motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -1201,11 +843,70 @@ public class Robot extends java.lang.Thread {
         motor_3.setPower(0);
     }
 
+    public void grabberRotatorMovePosition(double power, int position) {
+        grabber_rotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        grabber_rotater.setPower(power);
+        grabber_rotater.setTargetPosition(position);
+        grabber_rotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (grabber_rotater.isBusy()) {
+            //Waiting for Robot to travel the distance
+            telemetry.addData("Grabber", "Extending");
+        }
+
+        grabber_rotater.setPower(0);
+    }
+
+    public void grabberRotatorMoveTime(double power, int time) {
+        grabber_rotater.setPower(power);
+
+        try {
+            sleep(time);
+        } catch (Exception e) {
+        }
+
+        grabber_rotater.setPower(0);
+    }
+
+    public void grabberSlideMovePosition(double power, int position) {
+        grabber_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        grabber_slide.setPower(power);
+        grabber_slide.setTargetPosition(position);
+        grabber_slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (grabber_slide.isBusy()) {
+            telemetry.addData("Grabber", "Extending");
+            telemetry.update();
+        }
+
+        grabber_slide.setPower(0);
+    }
+
+    public void grabberSlideMoveTime(double power, int time) {
+        grabber_slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        grabber_slide.setPower(power);
+
+        try {
+            sleep(time);
+        } catch (Exception e) {
+        }
+
+        grabber_slide.setPower(0);
+    }
+
+
+    public void grabberExtendSlide(double   rotator_power,
+                                   double   slide_power,
+                                   int      rotator_position,
+                                   int      slide_position) {
+        grabberRotatorMovePosition(rotator_power, rotator_position);
+        grabberSlideMovePosition(slide_power, slide_position);
+    }
+
     public void grabMineral(int time) {
         grabber_1.setPower(-0.75);
         try {
             sleep(time*100);
-            teammarker.setPower(0);
         } catch (Exception e) {
         }
 
@@ -1234,24 +935,12 @@ public class Robot extends java.lang.Thread {
         telemetry.addData("Please wait", "In function init devices");
         telemetry.update();
 
-        imu = hardwareMap.get(Gyroscope.class, "imu");
-
-        //Servo for rotating the grabber
-        teammarker = hardwareMap.get(CRServo.class, "teammarker");
-
-        holder = hardwareMap.get(CRServo.class, "holder");
         //Wheels
         motor_0 = hardwareMap.get(DcMotor.class, "motor_br");
         motor_1 = hardwareMap.get(DcMotor.class, "motor_bl");
         motor_2 = hardwareMap.get(DcMotor.class, "motor_fr");
         motor_3 = hardwareMap.get(DcMotor.class, "motor_fl");
 
-
-        //Grabber Motor
-  //      motor_4 = hardwareMap.get(DcMotor.class, "grabber_lift");
-
-        //Grabber Slide
-        motor_6 = hardwareMap.get(DcMotor.class, "grabber_slide");
 
         //Latch
         latch = hardwareMap.get(DcMotor.class, "latch");
