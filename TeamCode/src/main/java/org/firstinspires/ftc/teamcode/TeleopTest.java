@@ -34,60 +34,52 @@ public class TeleopTest extends LinearOpMode{
         while (opModeIsActive()) {
             telemetry.addData("TeleOP", "New Code");
             telemetry.update();
-            //Gamepad 1 controls
-            float joystickRightX = this.gamepad1.right_stick_x;
-            float joystickRightY = this.gamepad1.right_stick_y;
-            float joystickLeftX = this.gamepad1.left_stick_x;
 
-            //Forward, backward, and diagonal movement
-            if((joystickRightX*joystickRightX) - (joystickRightY*joystickRightY) < 0){
-                if (this.gamepad1.b == true) {
-                    if (joystickRightY > 0) {
-                        robot.moveFR(1);
-                    } else if (joystickRightY < 0) {
-                        robot.moveBR(1);
-                    }
-                } else if (this.gamepad1.x == true) {
-                    if (joystickRightY > 0) {
-                        robot.moveFL(1);
-                    } else if (joystickRightY < 0) {
-                        robot.moveBL(1);
-                    }
-                } else {
-                    if (joystickRightY < 0) {
-                        robot.moveF(1);
-                    } else if (joystickRightY > 0) {
-                        robot.moveB(1);
-                    }
-                }
-                //Move left and right
-            } else {
-                if (joystickRightX > 0) {
-                    robot.moveR(50);
-                } else if (joystickRightX < 0) {
-                    robot.moveL(50);
-                }
-            }
 
             //Turning
-            if (joystickLeftX != 0) {
-                if (joystickLeftX > 0) {
-                    robot.slow_turn(-1);
-                } else {
-                    robot.slow_turn(1);
-                }
+            if (this.gamepad1.left_stick_x > 0.5) {
+                robot.turnForTime(1, 10, false, 1 );
+        }
+
+            if (this.gamepad1.left_stick_x < -0.5) {
+                robot.turnForTime(1, 10, false, -1 );
+            }
+
+
+            if (this.gamepad1.right_stick_y > 0.5) {
+                telemetry.addData("Grabber-Rotator", "Moving UP");
+                telemetry.update();
+                robot.moveB(1);
+            }
+
+            if (this.gamepad1.right_stick_y < -0.5) {
+                telemetry.addData("Grabber-Rotator", "Moving Down");
+                telemetry.update();
+                robot.moveF(1);
+            }
+
+            if (this.gamepad1.right_stick_x > 0.5) {
+                telemetry.addData("Grabber-Slide", "Extending");
+                telemetry.update();
+                robot.moveR(1);
+            }
+
+            if (this.gamepad1.right_stick_x < -0.5) {
+                telemetry.addData("Grabber-Slide", "Contracting");
+                telemetry.update();
+                robot.moveL(1);
             }
 
             if (this.gamepad1.x == true) {
                 telemetry.addData("Robot-Testing ", "Moving Left");
                 telemetry.update();
-                robot.moveLeftForTime(0.5, 2000, true);
+                robot.moveLeftForTime(0.3, 2000, true);
             }
 
             if (this.gamepad1.b == true) {
                 telemetry.addData("Robot-Testing ", "Moving Right");
                 telemetry.update();
-                robot.moveRightForTime(0.5, 2000, true);
+                robot.moveRightForTime(0.3, 2000, true);
             }
             if (this.gamepad1.y == true) {
                 telemetry.addData("Robot-Testing ", "Moving Forward");
@@ -109,25 +101,25 @@ public class TeleopTest extends LinearOpMode{
             if (this.gamepad2.right_stick_y > 0.5) {
                 telemetry.addData("Grabber-Rotator", "Moving UP");
                 telemetry.update();
-                robot.grabberRotatorMoveTime(0.5, 50);
+                robot.grabberRotatorMoveTime(1, 50);
             }
 
             if (this.gamepad2.right_stick_y < -0.5) {
                 telemetry.addData("Grabber-Rotator", "Moving Down");
                 telemetry.update();
-                robot.grabberRotatorMoveTime(-0.5, 50);
+                robot.grabberRotatorMoveTime(-1, 50);
             }
 
             if (this.gamepad2.left_stick_x > 0.5) {
                 telemetry.addData("Grabber-Slide", "Extending");
                 telemetry.update();
-                robot.grabberSlideMoveTime(-1, 50);
+                robot.grabberSlideMoveTime(1, 50);
             }
 
             if (this.gamepad2.left_stick_x < -0.5) {
                 telemetry.addData("Grabber-Slide", "Contracting");
                 telemetry.update();
-                robot.grabberSlideMoveTime(1, 50);
+                robot.grabberSlideMoveTime(-1, 50);
             }
 
             if (this.gamepad2.left_bumper == true) {

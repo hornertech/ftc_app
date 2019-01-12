@@ -588,12 +588,6 @@ public class Robot extends java.lang.Thread {
     public void turnForTime(double power, int time, boolean speed, int orientation) {
         Log.i(TAG, "Enter Function: turnForTime Power : " + power + " and time : " + time + "Speed : " + speed + "orientation : " + orientation);
 
-        long motor0_start_position = motor_0.getCurrentPosition();
-        long motor1_start_position = motor_1.getCurrentPosition();
-        long motor2_start_position = motor_2.getCurrentPosition();
-        long motor3_start_position = motor_3.getCurrentPosition();
-
-
         if (speed == true) {
             motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -610,11 +604,18 @@ public class Robot extends java.lang.Thread {
             motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //Set power of all motors
-            motor_0.setPower(orientation * power * 1.6);
+            //motor_0.setPower(orientation * power * 1.6);
+            motor_0.setPower(orientation * power);
             motor_1.setPower(orientation * power);
             motor_2.setPower(orientation * power);
-            motor_3.setPower(orientation * power * 1.5);
+           //motor_3.setPower(orientation * power * 1.5);
+            motor_3.setPower(orientation * power);
         }
+
+      /*  motor_0.setPower(orientation * power * 0.75);
+        motor_1.setPower(orientation * power * 1.5);
+        motor_2.setPower(orientation * power * 1.5);
+        motor_3.setPower(orientation * power *0.75); */
         try {
             sleep(time);
         } catch (Exception e) {
@@ -625,29 +626,15 @@ public class Robot extends java.lang.Thread {
         motor_1.setPower(0);
         motor_2.setPower(0);
         motor_3.setPower(0);
-
-        long motor0_end_position = motor_0.getCurrentPosition();
-        long motor1_end_position = motor_1.getCurrentPosition();
-        long motor2_end_position = motor_2.getCurrentPosition();
-        long motor3_end_position = motor_3.getCurrentPosition();
-
-        if (DEBUG_INFO ) {
-            Log.i(TAG, "Ticks Moved Motor0 : " + (motor0_end_position - motor0_start_position));
-            Log.i(TAG, "Ticks Moved Motor1 : " + (motor1_end_position - motor1_start_position));
-            Log.i(TAG, "Ticks Moved Motor2 : " + (motor2_end_position - motor2_start_position));
-            Log.i(TAG, "Ticks Moved Motor3 : " + (motor3_end_position - motor3_start_position));
-
-            Log.i(TAG, "Exit Function: turnForTime");
-        }
     }
 
     public void moveB(long distance) {
         telemetry.addData("Direction", "Forward");
         telemetry.update();
-        motor_0.setPower(-0.5);
-        motor_1.setPower(0.5);
-        motor_2.setPower(-0.5);
-        motor_3.setPower(0.5);
+        motor_0.setPower(-0.8);
+        motor_1.setPower(0.8);
+        motor_2.setPower(-0.8);
+        motor_3.setPower(0.8);
         try {
             sleep(distance * movementFactor);
         } catch (Exception e) {
@@ -662,10 +649,10 @@ public class Robot extends java.lang.Thread {
     }
 
     public void moveF(long distance) {
-        motor_0.setPower(0.5);
-        motor_1.setPower(-0.5);
-        motor_2.setPower(0.5);
-        motor_3.setPower(-0.5);
+        motor_0.setPower(0.8);
+        motor_1.setPower(-0.8);
+        motor_2.setPower(0.8);
+        motor_3.setPower(-0.8);
         try {
             sleep(distance * movementFactor);
         } catch (Exception e) {
@@ -680,7 +667,7 @@ public class Robot extends java.lang.Thread {
     }
 
     public void moveR(long distance) {
-        double power = 0.6;
+        double power = 0.8;
 
         motor_0.setPower(power );
         motor_1.setPower(power);
@@ -700,7 +687,7 @@ public class Robot extends java.lang.Thread {
     }
 
     public void moveL(long distance) {
-        double power = 0.6;
+        double power = 0.8;
 
         motor_0.setPower((-1) * power);
         motor_1.setPower((-1) * power);

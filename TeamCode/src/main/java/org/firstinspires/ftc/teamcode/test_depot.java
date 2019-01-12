@@ -253,8 +253,8 @@ public class test_depot extends LinearOpMode {
         robot.unlatchUsingEncoderPosition(1, 1, 12);
         robot.moveRightToPosition(1, 4);
         robot.moveBackwardForTime(0.25, 350, false);
-        robot.moveForwardToPosition(0.5, 19);
-        robot.moveLeftForTime(0.5, 200, false);
+        robot.moveForwardForTime(0.5, 600, true);
+       // robot.moveLeftForTime(0.5, 200, false);
 
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
@@ -270,73 +270,104 @@ public class test_depot extends LinearOpMode {
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
             //Knock off mineral
-            robot.moveForwardToPosition(0.5, 14);
-            robot.moveBackwardToPosition(0.5, 14);
+            robot.moveForwardForTime(0.5, 600, true);
+            robot.pause(250);
+            robot.moveBackwardForTime(0.5, 450, true);
+            robot.pause(250);
+            robot.turnForTime(-0.9, 850, false, 1);
         } else if (detect_result == NO_MINERAL_FOUND) {
             Log.i(TAG, "Detection Problem at center : Still Knocking off");
             //for time being knock off the mineral
-            robot.moveForwardToPosition(0.5, 14);
-            robot.moveBackwardToPosition(0.5, 14);
+            robot.moveForwardForTime(0.5, 600, true);
+            robot.pause(250);
+            robot.moveBackwardForTime(0.5, 450, true);
+            robot.pause(250);
+            robot.turnForTime(-0.9, 850, false, 1);
 
         } else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-            robot.moveRightForTime(0.7, 800, true);
+            robot.pause(250);
+            robot.moveRightForTime(0.5, 850, true);
             detect_result = detectOnceTime(robot);
-            if (detect_result == GOLD_MINERAL_FOUND) {
-                Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
-                //Knock off mineral
-                robot.moveForwardToPosition(0.5, 14);
-                robot.moveBackwardToPosition(0.5, 14);
-                //Come back to center
-                robot.moveLeftForTime(0.7, 850, true);
-            } else if (detect_result == NO_MINERAL_FOUND) {
-                Log.i(TAG, "Detection Problem at right location : Still Knocking off");
-                //Knock off mineral
-                robot.moveForwardToPosition(0.5, 14);
-                //  robot.pause();
-                robot.moveBackwardToPosition(0.5, 14);
-                //Come back to center
-                robot.moveLeftForTime(0.7, 850, true);
-            } else { // Knock of Leftmost Mineral
-                Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
-                //Move left 232 in.
 
-                robot.moveLeftForTime(0.5, 2000, true);
-                //Knock off mineral
-                robot.moveForwardToPosition(0.5, 14);
-                //  robot.pause();
-                robot.moveBackwardToPosition(0.5, 14);
+                if (detect_result == GOLD_MINERAL_FOUND) {
+                    Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
+                    //Knock off mineral
+                    robot.moveForwardForTime(0.5, 550, true);
+                    robot.pause(250);
+                    robot.moveBackwardForTime(0.5, 400, true);
+                    robot.pause(250);
+                    //Come back to center
+                    robot.turnForTime(-0.9, 800, false, 1);
+                    robot.moveBackwardForTime(0.5, 600, true);
 
-                //Come Back to Center
-                robot.moveRightForTime(0.6, 950, true);
+                } else if (detect_result == NO_MINERAL_FOUND) {
+                    Log.i(TAG, "Detection Problem at right location : Still Knocking off");
+                    //Knock off mineral
+                    robot.moveForwardToPosition(0.5, 14);
+                    //  robot.pause();
+                    robot.moveBackwardToPosition(0.5, 14);
+                    //Come back to center
+                    robot.moveLeftForTime(0.7, 850, true);
+                } else { // Knock of Leftmost Mineral
+                    Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
+                    //Move left 232 in.
+
+                    robot.moveLeftForTime(0.3, 2200, true);
+                    //Knock off mineral
+                    robot.moveForwardForTime(0.5, 550, true);
+                    robot.pause(250);
+                    robot.moveBackwardForTime(0.5, 400, true);
+                    robot.pause(250);
+                    //Come Back to Center
+                   // robot.moveRightForTime(0.6, 950, true);
+                }
             }
-        }
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
-        //End step 2
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
+            //End step 2
 
 
-        /*********************Begin step 3 **************************/
+            /*********************Begin step 3 **************************/
 
-        Log.i(TAG, "STEP 3: Drop Team Marker ");
-        robot.moveLeftForTime(0.75, 1500, true);
-        robot.turnForTime(-0.6, 400, false, 1);
-        robot.wall_align(-0.3, 1200);
+            Log.i(TAG, "STEP 3: Drop Team Marker ");
+/*
+            robot.pause(250);
+            robot.moveBackwardForTime(1, 1100, true);
+            robot.pause(250);
+            robot.turnForTime(0.9, 300, false, 1);
+            robot.wall_align(-0.2, 1500);
+            robot.pause(250);
+            robot.moveRightForTime(0.3, 500, true);
+            robot.moveForwardForTime(1, 700, true);
+            robot.grabberRotatorMoveTime(1, 2200);
+            robot.releaseMineral(20);
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+            robot.moveBackwardForTime(1, 1000, true);
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");*/
+
+        /*
+        robot.moveLeftForTime(0.5, 1300, true);
+        robot.turnForTime(-0.6, 700, false, 1);
+        robot.wall_align(-0.3, 2000);
+        robot.pause(500);
         robot.moveRightForTime(0.5, 400, true);
         robot.moveForwardForTime(1, 900, true);
 
-        robot.grabberRotatorMoveTime(1, 800);
-        robot.releaseMineral(10);
-        robot.grabberRotatorMoveTime(-1, 900);
+    robot.grabberRotatorMoveTime(1, 1500);
+    robot.releaseMineral(10);
+    robot.grabberRotatorMoveTime(-1, 1500);
 
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
-        Log.i(TAG, "STEP 4: Park At Crater ");
-        //Begin Step 4
-        robot.moveBackwardForTime(1, 1250, true);
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
+    Log.i(TAG, "STEP 4: Park At Crater ");
+    //Begin Step 4
+    robot.moveBackwardForTime(1, 1250, true);
+    time_taken = System.currentTimeMillis() - start_time;
+    Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds"); */
 
         if (tfod != null) {
             tfod.shutdown();
