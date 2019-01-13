@@ -69,6 +69,18 @@ public class Robot extends java.lang.Thread {
 
         return (encoder_ticks);
     }
+    // This function takes input Angle (in degrees)  and it will return Motor ticks needed
+    // to make that Turn2
+    public int AngleToTick(double angle) {
+        Log.i(TAG, "Enter FUNC: AngleToTick");
+
+        int encoder_ticks = (int) ((java.lang.Math.abs(angle) * TICKS_PER_ROTATION * 2.75) / 360);
+
+        Log.i(TAG, "Ticks needed for Angle : " + encoder_ticks);
+        Log.i(TAG, "Exit FUNC: AngleToTick");
+
+        return (encoder_ticks);
+    }
 
      // Come down using encoder moveToPosition and come out of latch
     public void unlatchUsingEncoderPosition(double power, int direction, double rotattion) {
@@ -358,6 +370,69 @@ public class Robot extends java.lang.Thread {
             Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
             Log.i(TAG, "Exit Function: moveRightToPosition");
         }
+    }
+    // Move Right to specific distance in inches, with power (0 to 1)
+    public void turnWithAngle(double power, int angle) {
+        Log.i(TAG, "Enter Function: moveRight Power : " + power + " and angle : " + angle);
+
+        int orientation = 1;
+        if (angle > 0) {
+            Log.i(TAG, "Turning Clockwise");
+        } else {
+            orientation = -1;
+            Log.i(TAG, "Turning Anti-Clockwise");
+        }
+        try {
+            sleep(1000);
+        } catch (Exception e) {
+        }
+        // Reset all encoders
+        motor_0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //Find the motor ticks needed to travel the required distance
+        int ticks = AngleToTick(angle);
+
+        // Set the target position for all motors (in ticks)
+        motor_0.setTargetPosition(orientation * ticks);
+        motor_1.setTargetPosition(orientation * ticks);
+        motor_2.setTargetPosition(orientation * ticks);
+        motor_3.setTargetPosition(orientation * ticks);
+
+        //Set power of all motors
+        motor_0.setPower(power);
+        motor_1.setPower(power);
+        motor_2.setPower(power);
+        motor_3.setPower(power);
+
+        //Set Motors to RUN_TO_POSITION
+        motor_0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor_3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Wait for them to reach to the position
+        while (motor_0.isBusy() || motor_1.isBusy() || motor_2.isBusy() || motor_3.isBusy()) {
+            //Waiting for Robot to travel the distance
+            telemetry.addData("Turning", "Moving");
+            telemetry.update();
+        }
+
+
+        //Reached the distance, so stop the motors
+        motor_0.setPower(0);
+        motor_1.setPower(0);
+        motor_2.setPower(0);
+        motor_3.setPower(0);
+
+        Log.i(TAG, "TICKS needed : " + ticks);
+        Log.i(TAG, "Actual Ticks Motor0 : " + motor_0.getCurrentPosition());
+        Log.i(TAG, "Actual Ticks Motor1 : " + motor_1.getCurrentPosition());
+        Log.i(TAG, "Actual Ticks Motor2 : " + motor_2.getCurrentPosition());
+        Log.i(TAG, "Actual Ticks Motor3 : " + motor_3.getCurrentPosition());
+        Log.i(TAG, "Exit Function: turnNew");
     }
 
 
@@ -811,10 +886,10 @@ public class Robot extends java.lang.Thread {
 
     //CLEANUP: remove this and use moveLeft/RightForTime
     public void wall_align(double power, int time) {
-        motor_0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor_3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         motor_0.setPower(-1 * power);
         motor_1.setPower(-1 * power);
