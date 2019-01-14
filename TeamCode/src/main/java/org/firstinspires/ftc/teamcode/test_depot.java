@@ -111,7 +111,7 @@ public class test_depot extends LinearOpMode {
             robot.moveRightToPosition(1, 4);
         }
         robot.moveBackwardForTime(0.25, 350, false);
-        robot.moveForwardForTime(0.5, 600, true);
+        robot.moveForwardForTime(1, 600, true);
         // robot.moveLeftForTime(0.5, 200, false);
 
         time_taken = System.currentTimeMillis() - start_time;
@@ -124,29 +124,18 @@ public class test_depot extends LinearOpMode {
         telemetry.update();
         Log.i(TAG, "STEP 2: Detect and Dislodge ");
 
-            detect_result = detectOnceTime(robot);
+        detect_result = detectOnceTime(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
             //Knock off mineral
             robot.moveForwardForTime(0.5, 600, true);
-            robot.pause(150);
             robot.moveBackwardForTime(0.5, 450, true);
-            robot.pause(150);
-           // robot.turnForTime(-0.7, 875, false, 1);
+            robot.pause(100);
+            // robot.turnForTime(-0.7, 875, false, 1);
             robot.turnWithAngleClockwise(0.5, 90);
-        } else if (detect_result == NO_MINERAL_FOUND) {
-            Log.i(TAG, "Detection Problem at center : Still Knocking off");
-            //for time being knock off the mineral
-            robot.moveForwardForTime(0.5, 600, true);
-            robot.pause(150);
-            robot.moveBackwardForTime(0.5, 450, true);
-            robot.pause(150);
-            //robot.turnForTime(-0.7, 875, false, 1);
-            robot.turnWithAngleClockwise(0.5, 90);
-
         } else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-            robot.pause(250);
+            robot.pause(100);
             robot.moveRightForTime(0.5, 850, true);
             detect_result = detectOnceTime(robot);
 
@@ -154,25 +143,12 @@ public class test_depot extends LinearOpMode {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(250);
                 robot.moveBackwardForTime(0.5, 400, true);
-                robot.pause(250);
+                robot.pause(100);
                 //Come back to center
-                //robot.turnForTime(-0.9, 800, false, 1);
+                ;
                 robot.turnWithAngleClockwise(0.5, 90);
-                robot.moveBackwardForTime(0.5, 600, true);
-
-            } else if (detect_result == NO_MINERAL_FOUND) {
-                Log.i(TAG, "Detection Problem at right location : Still Knocking off");
-                //Knock off mineral
-                robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(250);
-                robot.moveBackwardForTime(0.5, 400, true);
-                robot.pause(250);
-                //Come back to center
-                //robot.turnForTime(-0.9, 800, false, 1);
-                robot.turnWithAngleClockwise(0.5, 90);
-                robot.moveBackwardForTime(0.5, 600, true);
+                robot.moveBackwardForTime(1, 600, true);
 
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
@@ -187,13 +163,12 @@ public class test_depot extends LinearOpMode {
                 robot.moveLeftForTime(0.7, 750, true);
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(250);
                 robot.moveBackwardForTime(0.5, 400, true);
-                robot.pause(250);
-                robot.turnWithAngleClockwise(0.5, 90);
-               // robot.turnForTime(-0.9, 800, false, 1);
                 robot.pause(100);
-                robot.moveForwardForTime(0.5, 600, true);
+                robot.turnWithAngleClockwise(0.5, 90);
+                // robot.turnForTime(-0.9, 800, false, 1);
+                robot.pause(100);
+                robot.moveForwardForTime(1, 600, true);
                 //Come Back to Center
                 // robot.moveRightForTime(0.6, 950, true);
             }
@@ -204,30 +179,29 @@ public class test_depot extends LinearOpMode {
         //End step 2
 
 
-    /*********************Begin step 3 **************************/
+        /*********************Begin step 3 **************************/
 
-    Log.i(TAG, "STEP 3: Drop Team Marker ");
+        Log.i(TAG, "STEP 3: Drop Team Marker ");
 
-    robot.pause(250);
-    robot.moveBackwardForTime(1, 1100, true);
-    robot.pause(250);
-    //robot.turnForTime(0.9, 300, false, 1);
-        //
+        robot.pause(100);
+        robot.moveBackwardForTime(1, 1100, true);
+        robot.pause(100);
+
         robot.turnWithAngleAnticlockwise(0.5, 45);
-    robot.grabberSlideMoveTime(-1, 1000);
+        robot.grabberSlideMoveTime(-1, 1000);
 
-    //robot.wall_align(-0.22, 1800);
-    robot.moveLeftForTime(0.3, 2200, false);
-    robot.pause(250);
-    robot.moveRightForTime(0.3, 500, true);
-    robot.moveForwardForTime(1, 700, true);
-    robot.grabberRotatorMoveTime(1, 2200);
-    robot.releaseMineral(20);
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
-    robot.moveBackwardForTime(1, 1000, true);
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
+        //wall_align
+        robot.moveLeftForTime(0.3, 2200, false);
+        robot.pause(100);
+        robot.moveRightForTime(0.3, 500, true);
+        robot.moveForwardForTime(1, 700, true);
+        robot.grabberRotatorMoveTime(1, 2200);
+        robot.releaseMineral(20);
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+        robot.moveBackwardForTime(1, 1000, true);
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
 
 
         if (tfod != null) {

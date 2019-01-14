@@ -110,7 +110,7 @@ public class test extends LinearOpMode {
             robot.moveRightToPosition(1, 4);
         }
         robot.moveBackwardForTime(0.25, 350, false);
-        robot.moveForwardForTime(0.5, 600, true);
+        robot.moveForwardForTime(1, 600, true);
 
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
@@ -126,19 +126,10 @@ public class test extends LinearOpMode {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
             //Knock off mineral
             robot.moveForwardForTime(0.5, 600, true);
-            robot.pause(150);
             robot.moveBackwardForTime(0.5, 450, true);
-            robot.pause(150);
+            robot.pause(100);
             robot.turnWithAngleAnticlockwise(0.5, 85);
-        } else if (detect_result == NO_MINERAL_FOUND) {
-            Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
-            //Knock off mineral
-            robot.moveForwardForTime(0.5, 600, true);
-            robot.pause(150);
-            robot.moveBackwardForTime(0.5, 450, true);
-            robot.pause(150);
-            robot.turnWithAngleAnticlockwise(0.5, 85);
-        } else {//Move right 14.5 in.
+        }  else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
             robot.turnWithAngleClockwise(0.5, 10);
             robot.moveRightForTime(0.5, 850, true);
@@ -147,22 +138,12 @@ public class test extends LinearOpMode {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(100);
                 robot.moveBackwardForTime(0.5, 450, true);
                 robot.pause(100);
                 //Come back to center
                 robot.turnWithAngleAnticlockwise(0.5, 78);
-                robot.moveForwardForTime(0.5, 650, true);
+                robot.moveForwardForTime(1, 650, true);
 
-            } else if (detect_result == NO_MINERAL_FOUND) {
-                Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
-                //Knock off mineral
-                robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(100);
-                robot.moveBackwardForTime(0.5, 450, true);
-                robot.pause(100);
-                robot.turnWithAngleAnticlockwise(0.5, 78);
-                robot.moveForwardForTime(0.5, 650, true);
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
                 robot.turnWithAngleClockwise(0.5, 10);
@@ -170,13 +151,12 @@ public class test extends LinearOpMode {
 
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.pause(100);
                 robot.moveBackwardForTime(0.5, 400, true);
                 robot.pause(100);
                 robot.turnWithAngleAnticlockwise(0.5, 90);
                 // robot.turnForTime(-0.9, 800, false, 1);
                 robot.pause(100);
-                robot.moveBackwardForTime(0.5, 600, true);
+                robot.moveBackwardForTime(1, 600, true);
                 //Come Back to Center
                 // robot.moveRightForTime(0.6, 950, true);
             }
@@ -194,6 +174,8 @@ public class test extends LinearOpMode {
         robot.moveForwardForTime(1, 1350, true);
         robot.pause(100);
         robot.turnWithAngleAnticlockwise(0.5, 45);
+
+        //wall align
         robot.moveRightForTime(0.3, 2000, false);
         robot.pause(100);
         robot.moveLeftForTime(0.3, 500, true);
