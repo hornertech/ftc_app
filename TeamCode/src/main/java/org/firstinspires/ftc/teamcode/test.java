@@ -38,106 +38,14 @@ public class test extends LinearOpMode {
 
     private TFObjectDetector tfod;
 
-    public void ZigZag(org.firstinspires.ftc.teamcode.Robot robot, int iteration,
-                       int distance, double power) {
-        int sleeptime = 100;
-        switch (iteration) {
-            case 0: {
-                Log.i(TAG, "ZigZag Moving Forward");
-                robot.moveForwardToPosition(power, distance); //Move forward 2 inch from center
-              //  sleep(sleeptime);
-                return;
-            }
-
-            case 1: {
-                Log.i(TAG, "ZigZag Moving Backward");
-                robot.moveBackwardToPosition(power, 2 * distance); //Move back 2 inches from center
-              //  sleep(sleeptime);
-                return;
-            }
-
-            case 2: {
-                Log.i(TAG, "ZigZag Moving Left");
-                robot.moveForwardToPosition(power, distance); //Come to center
-                robot.moveLeftToPosition(power, distance); //Move Left 2 inches from center
-              //  sleep(sleeptime);
-                return;
-            }
-
-            case 3: {
-                Log.i(TAG, "ZigZag Moving Right");
-                robot.moveRightToPosition(power, 2 * distance); // Move 2 inches right from center
-              //  sleep(sleeptime);
-                return;
-            }
-
-            case 4: {
-               Log.i(TAG, "ZigZag Coming back to center");
-               robot.moveLeftToPosition(power, distance); //Come back to center, detection failed
-             //  sleep(sleeptime);
-                return;
-            }
-
-            default: {
-                // We don't expect this to happen, but return
-                return;
-            }
-
-        }
-    }
-
-    public void move_center(org.firstinspires.ftc.teamcode.Robot robot, int iteration,
-                       int distance, double power) {
-        int sleeptime = 100;
-        switch (iteration) {
-            case 0: {
-                Log.i(TAG, "Already At Center");
-                return;
-            }
-
-            case 1: {
-                Log.i(TAG, "Move Backward to come to center");
-                robot.moveBackwardToPosition(power, distance);
-                return;
-            }
-
-            case 2: {
-                Log.i(TAG, "Move Forward to come to center");
-                robot.moveForwardToPosition(power, distance);
-                return;
-            }
-
-            case 3: {
-                Log.i(TAG, "Move Right to come to center");
-                robot.moveRightToPosition(power, distance); //Move back 2 inches from center
-                return;
-            }
-
-            case 4: {
-                Log.i(TAG, "Move Left to come to center");
-                robot.moveLeftToPosition(power, distance); //Move back 2 inches from center
-                return;
-            }
-
-            default: {
-                // We don't expect this to happen, but return
-                return;
-            }
-
-        }
-    }
-
-    public int detectOnceNew(org.firstinspires.ftc.teamcode.Robot robot) {
-        Log.i(TAG, "Enter FUNC:  detectOnceNew");
-        int zigzag_distance = 3;
-        double zigzag_power = 0.3;
-        for (int i = 0; i < 5; i++) {
+    public int detectOnceTime(org.firstinspires.ftc.teamcode.Robot robot) {
+        Log.i(TAG, "Enter FUNC:  detectOnceTime");
+        for (int i = 0; i < 6; i++) {
+            sleep(300);
             Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    telemetry.update();
                     Log.i(TAG, "Number of object detected : " + updatedRecognitions.size());
                     if (updatedRecognitions.size() == 1) {
                         for (Recognition recognition : updatedRecognitions) {
@@ -145,35 +53,24 @@ public class test extends LinearOpMode {
                                 Log.i(TAG, "Gold Mineral Found, Lets move it");
                                 telemetry.addData("Gold Mineral", "Detected!");
                                 telemetry.update();
-                                move_center(robot, i, zigzag_distance, zigzag_power);
                                 return GOLD_MINERAL_FOUND;
                             } else {
                                 Log.i(TAG, "Silver Mineral Found, Move ON");
                                 telemetry.addData("Gold Mineral", "Not detected!");
                                 telemetry.update();
-                                move_center(robot, i, zigzag_distance, zigzag_power);
                                 return SILVER_MINERAL_FOUND;
                             }
                         }
                     } else { //More than one object detected, lets move around a little
-                        Log.i(TAG, "Number of object detected More than 1");
-                        Log.i(TAG, "Move around to see if we can detect in next iteration");
-                        telemetry.addData("Detection", "Trying to move around");
-                        telemetry.update();
-                        ZigZag(robot, i, zigzag_distance, zigzag_power);
+                        Log.i(TAG, "Number of object detected More than 1, trying one more time");
                     }
                 } else {//Zero object detected, lets try to move around a little
-                    Log.i(TAG, "Number of object detected 0");
-                    Log.i(TAG, "Move around to see if we can detect in next iteration");
-                    telemetry.addData("Detection", "Trying to move around");
-                    telemetry.update();
-                    ZigZag(robot, i, zigzag_distance, zigzag_power);
+                    Log.i(TAG, "Number of object detected 0, Trying one more time");
                 }
             } else { //TFOD is not initailized properly, push the element in front (middle)
                 telemetry.addData("Tfod", "Not Initialized!");
                 telemetry.update();
                 Log.e(TAG, "TFOD Not initialized, returning");
-                move_center(robot, i, zigzag_distance, zigzag_power);
                 return NO_MINERAL_FOUND;
             }
         }
@@ -207,96 +104,111 @@ public class test extends LinearOpMode {
         //Begin step 1
         //Drop from lander
 
-    Log.i(TAG, "STEP 1: Come Down and Unlatch");
-
-    robot.unlatchUsingEncoderPosition(1, 1, 12);
-    robot.moveRightToPosition(1, 4);
-    robot.moveBackwardForTime(0.25, 250, false);
-    robot.moveForwardToPosition(0.5, 17);
-    robot.moveLeftForTime(0.5, 300, false);
-
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
-    //End step 1
-
-    //Begin step 2
-    telemetry.addData("Detection", "Started");
-    telemetry.update();
-    Log.i(TAG, "STEP 2: Detect and Dislodge ");
-
-    detect_result = detectOnceNew(robot);
-    if (detect_result == GOLD_MINERAL_FOUND) {
-        Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
-        //Knock off mineral
-        robot.moveForwardToPosition(0.5, 14);
-        //robot.pause();
-        robot.moveBackwardToPosition(0.5, 14);
-    } else if (detect_result == NO_MINERAL_FOUND) {
-        Log.i(TAG, "Detection Problem at center : Still Knocking off");
-        //for time being knock off the mineral
-        robot.moveForwardToPosition(0.5, 14);
-       // robot.pause();
-        robot.moveBackwardToPosition(0.5, 14);
-
-    } else {//Move right 14.5 in.
-        Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-        robot.moveRightForTime(0.7, 900, true);
-        detect_result = detectOnceNew(robot);
-        if (detect_result == GOLD_MINERAL_FOUND) {
-            Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
-            //Knock off mineral
-            robot.moveForwardToPosition(0.5, 14);
-           // robot.pause();
-            robot.moveBackwardToPosition(0.5, 14);
-            //Come back to center
-            robot.moveLeftForTime(0.7, 850, true);
-        } else if (detect_result == NO_MINERAL_FOUND) {
-            Log.i(TAG, "Detection Problem at right location : Still Knocking off");
-            //Knock off mineral
-            robot.moveForwardToPosition(0.5, 14);
-          //  robot.pause();
-            robot.moveBackwardToPosition(0.5, 14);
-            //Come back to center
-            robot.moveLeftForTime(0.7, 850, true);
-        } else { // Knock of Leftmost Mineral
-            Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
-              //Move left 232 in.
-
-            robot.moveLeftForTime(0.5, 2000, true);
-            //Knock off mineral
-            robot.moveForwardToPosition(0.5, 14);
-          //  robot.pause();
-            robot.moveBackwardToPosition(0.5, 14);
-
-            //Come Back to Center
-            robot.moveRightForTime(0.6, 950, true);
+        Log.i(TAG, "STEP 1: Come Down and Unlatch");
+        if (test) {
+            robot.unlatchUsingEncoderPosition(1, 1, 12);
+            robot.moveRightToPosition(1, 4);
         }
-    }
-    time_taken = System.currentTimeMillis() - start_time;
-    Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
-    //End step 2
+        robot.moveBackwardForTime(0.25, 350, false);
+        robot.moveForwardForTime(0.5, 600, true);
+
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
+        //End step 1
+
+        //Begin step 2
+        telemetry.addData("Detection", "Started");
+        telemetry.update();
+        Log.i(TAG, "STEP 2: Detect and Dislodge ");
+
+        detect_result = detectOnceTime(robot);
+        if (detect_result == GOLD_MINERAL_FOUND) {
+            Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
+            //Knock off mineral
+            robot.moveForwardForTime(0.5, 600, true);
+            robot.pause(150);
+            robot.moveBackwardForTime(0.5, 450, true);
+            robot.pause(150);
+            robot.turnWithAngleAnticlockwise(0.5, 85);
+        } else if (detect_result == NO_MINERAL_FOUND) {
+            Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
+            //Knock off mineral
+            robot.moveForwardForTime(0.5, 600, true);
+            robot.pause(150);
+            robot.moveBackwardForTime(0.5, 450, true);
+            robot.pause(150);
+            robot.turnWithAngleAnticlockwise(0.5, 85);
+        } else {//Move right 14.5 in.
+            Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
+            robot.turnWithAngleClockwise(0.5, 10);
+            robot.moveRightForTime(0.5, 850, true);
+            detect_result = detectOnceTime(robot);
+            if (detect_result == GOLD_MINERAL_FOUND) {
+                Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
+                //Knock off mineral
+                robot.moveForwardForTime(0.5, 550, true);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 450, true);
+                robot.pause(100);
+                //Come back to center
+                robot.turnWithAngleAnticlockwise(0.5, 78);
+                robot.moveForwardForTime(0.5, 650, true);
+
+            } else if (detect_result == NO_MINERAL_FOUND) {
+                Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
+                //Knock off mineral
+                robot.moveForwardForTime(0.5, 550, true);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 450, true);
+                robot.pause(100);
+                robot.turnWithAngleAnticlockwise(0.5, 78);
+                robot.moveForwardForTime(0.5, 650, true);
+            } else { // Knock of Leftmost Mineral
+                Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
+                robot.turnWithAngleClockwise(0.5, 10);
+                robot.moveLeftForTime(0.7, 1400, true);
+
+                //Knock off mineral
+                robot.moveForwardForTime(0.5, 550, true);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 400, true);
+                robot.pause(100);
+                robot.turnWithAngleAnticlockwise(0.5, 90);
+                // robot.turnForTime(-0.9, 800, false, 1);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 600, true);
+                //Come Back to Center
+                // robot.moveRightForTime(0.6, 950, true);
+            }
+        }
+        time_taken = System.currentTimeMillis() - start_time;
+        Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
+        //End step 2
 
 
-    //Begin step 3
-    //Add wall alignment here
-    Log.i(TAG, "STEP 3: Drop Team Marker ");
-    robot.turnForTime(0.6, 700, false, 1);
-    robot.moveForwardToPosition(1, 47);
-    robot.turnForTime(0.6, 300, false, 1);
+        //Begin step 3
+        //Add wall alignment here
+        Log.i(TAG, "STEP 3: Drop Team Marker ");
 
-        robot.wall_align(0.3, 1100);
-        // robot.pause();
-        robot.moveLeftForTime(0.5, 300, true);
+        robot.pause(100);
+        robot.moveForwardForTime(1, 1350, true);
+        robot.pause(100);
+        robot.turnWithAngleAnticlockwise(0.5, 45);
+        robot.moveRightForTime(0.3, 2000, false);
+        robot.pause(100);
+        robot.moveLeftForTime(0.3, 500, true);
+
         robot.moveForwardForTime(1, 800, true);
-        robot.grabberRotatorMoveTime(1, 500);
-        robot.releaseMineral(6);
-        robot.grabberRotatorMoveTime(-1, 600);
+        robot.grabberRotatorMoveTime(1, 2200);
+        robot.releaseMineral(20);
+
+
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
         Log.i(TAG, "STEP 4: Park At Crater ");
         //Begin Step 4
-        robot.moveBackwardForTime(1, 2450, true);
+        robot.moveBackwardForTime(1, 1550, true);
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
 

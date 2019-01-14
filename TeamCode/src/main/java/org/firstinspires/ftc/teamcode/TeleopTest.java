@@ -95,8 +95,15 @@ public class TeleopTest extends LinearOpMode{
             if (this.gamepad2.x == true) {
                 telemetry.addData("Grabber", "Extending");
                 telemetry.update();
-                robot.turnWithAngle(0.5, 90);
+                robot.turnWithAngleClockwise(0.5, 90);
             }
+
+            if (this.gamepad2.y == true) {
+                telemetry.addData("Grabber", "Extending");
+                telemetry.update();
+                robot.turnWithAngleAnticlockwise(0.5, 90);
+            }
+
 
             if (this.gamepad2.right_stick_y > 0.5) {
                 telemetry.addData("Grabber-Rotator", "Moving UP");
