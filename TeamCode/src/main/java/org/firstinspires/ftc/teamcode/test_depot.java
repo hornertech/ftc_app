@@ -41,7 +41,7 @@ public class test_depot extends LinearOpMode {
 
     public int detectOnceTime(org.firstinspires.ftc.teamcode.Robot robot) {
         Log.i(TAG, "Enter FUNC:  detectOnceTime");
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             sleep(300);
             Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
@@ -111,7 +111,7 @@ public class test_depot extends LinearOpMode {
             robot.moveRightToPosition(1, 4);
         }
         robot.moveBackwardForTime(0.25, 350, false);
-        robot.moveForwardForTime(1, 600, true);
+        robot.moveForwardForTime(1, 300, true);
         // robot.moveLeftForTime(0.5, 200, false);
 
         time_taken = System.currentTimeMillis() - start_time;

@@ -40,7 +40,7 @@ public class test extends LinearOpMode {
 
     public int detectOnceTime(org.firstinspires.ftc.teamcode.Robot robot) {
         Log.i(TAG, "Enter FUNC:  detectOnceTime");
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             sleep(300);
             Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
@@ -110,7 +110,7 @@ public class test extends LinearOpMode {
             robot.moveRightToPosition(1, 4);
         }
         robot.moveBackwardForTime(0.25, 350, false);
-        robot.moveForwardForTime(1, 600, true);
+        robot.moveForwardForTime(1, 300, true);
 
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
@@ -132,7 +132,7 @@ public class test extends LinearOpMode {
         }  else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
             robot.turnWithAngleClockwise(0.5, 10);
-            robot.moveRightForTime(0.5, 850, true);
+            robot.moveRightForTime(0.8, 500, true);
             detect_result = detectOnceTime(robot);
             if (detect_result == GOLD_MINERAL_FOUND) {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
@@ -142,7 +142,7 @@ public class test extends LinearOpMode {
                 robot.pause(100);
                 //Come back to center
                 robot.turnWithAngleAnticlockwise(0.5, 78);
-                robot.moveForwardForTime(1, 650, true);
+                robot.moveForwardForTime(1, 400, true);
 
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
@@ -171,18 +171,23 @@ public class test extends LinearOpMode {
         Log.i(TAG, "STEP 3: Drop Team Marker ");
 
         robot.pause(100);
-        robot.moveForwardForTime(1, 1350, true);
+     //   robot.moveForwardForTime(1, 1350, true);
+        robot.moveForwardAndDropSlide(1, 1350, true);
         robot.pause(100);
         robot.turnWithAngleAnticlockwise(0.5, 45);
 
         //wall align
-        robot.moveRightForTime(0.3, 2000, false);
+        robot.moveRightForTime(0.3, 1200, false);
         robot.pause(100);
         robot.moveLeftForTime(0.3, 500, true);
 
-        robot.moveForwardForTime(1, 800, true);
-        robot.grabberRotatorMoveTime(1, 2200);
-        robot.releaseMineral(20);
+        //robot.moveForwardForTime(1, 800, true);
+        //robot.grabberRotatorMoveTime(1, 2200);
+        robot.moveForwardAndDropSlide(1, 800, true);
+        robot.turnWithAngleClockwise(0.5, 20);
+        robot.releaseMineral(10);
+        robot.turnWithAngleAnticlockwise(0.5, 23);
+
 
 
         time_taken = System.currentTimeMillis() - start_time;
