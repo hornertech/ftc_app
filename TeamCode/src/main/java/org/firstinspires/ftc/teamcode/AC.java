@@ -40,7 +40,7 @@ public class AC extends LinearOpMode {
 
     public int detectOnceTime(org.firstinspires.ftc.teamcode.Robot robot) {
         Log.i(TAG, "Enter FUNC:  detectOnceTime");
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             sleep(300);
             Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
@@ -106,7 +106,7 @@ public class AC extends LinearOpMode {
         robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
         robot.moveRightToPosition(1, 4);                    //Un-hook
         robot.moveBackwardForTime(0.25, 350, false);        //Aligning against lander
-        robot.moveForwardForTime(1, 600, true);             //Move forward to Central position
+        robot.moveForwardForTime(1, 275, true);            //Move forward to Central position
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
         //End step 1
@@ -119,33 +119,34 @@ public class AC extends LinearOpMode {
         detect_result = detectOnceTime(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
-            robot.moveForwardForTime(0.5, 600, true);               //Knock off mineral
-            robot.moveBackwardForTime(0.5, 450, true);              //Move backward to Central Position
+            robot.moveForwardForTime(0.5, 550, true);               //Knock off mineral
             robot.pause(100);
-            robot.turnWithAngleAnticlockwise(0.5, 85);              //Turn Left
-        }  else {//Move right 14.5 in.
+            robot.moveBackwardForTime(0.5, 400, true);              //Move backward to Central Position
+            robot.pause(100);
+            robot.turnWithAngleAnticlockwise(0.5, 80);              //Turn Left
+        } else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
-            robot.turnWithAngleClockwise(0.5, 10);
-            robot.moveRightForTime(0.5, 850, true);                 //Move Right to look for Mineral at 2nd location
+            robot.turnWithAngleClockwise(0.5, 8);
+            robot.moveRightForTime(0., 500, true);                 //Move Right to look for Mineral at 2nd location
             detect_result = detectOnceTime(robot);
             if (detect_result == GOLD_MINERAL_FOUND) {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 robot.moveForwardForTime(0.5, 550, true);          //Knock off mineral
-                robot.moveBackwardForTime(0.5, 450, true);         //Move back
                 robot.pause(100);
-                robot.turnWithAngleAnticlockwise(0.5, 78);         //Turn Left degress
-                robot.moveForwardForTime(1, 650, true);            //Move back to Central Position
-
+                robot.moveBackwardForTime(0.5, 425, true);         //Move back
+                robot.pause(100);
+                robot.turnWithAngleAnticlockwise(0.5, 90);         //Turn Left degress
+                robot.moveForwardForTime(1, 400, true);            //Move back to Central Position
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
                 robot.turnWithAngleClockwise(0.5, 10);             //Slight turn Right to align
-                robot.moveLeftForTime(0.7, 1400, true);            //Move Left to look for Mineral at 3rd location
-                robot.moveForwardForTime(0.5, 550, true);          //Knock off mineral
-                robot.moveBackwardForTime(0.5, 400, true);         //Move back
+                robot.moveLeftForTime(0.7, 1450, true);            //Move Left to look for Mineral at 3rd location
+                robot.moveForwardForTime(0.5, 525, true);          //Knock off mineral
+                robot.moveBackwardForTime(0.5, 425, true);         //Move back
                 robot.pause(100);
                 robot.turnWithAngleAnticlockwise(0.5, 90);         //Turn Left 90 degress
                 robot.pause(100);
-                robot.moveBackwardForTime(1, 600, true);           //Move backward to Central Position
+                robot.moveBackwardForTime(.65, 500, true);         //Move backward to Central Position
             }
         }
         time_taken = System.currentTimeMillis() - start_time;

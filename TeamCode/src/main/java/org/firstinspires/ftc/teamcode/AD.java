@@ -41,7 +41,7 @@ public class AD extends LinearOpMode {
 
     public int detectOnceTime(org.firstinspires.ftc.teamcode.Robot robot) {
         Log.i(TAG, "Enter FUNC:  detectOnceTime");
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             sleep(300);
             Log.i(TAG, "Iteration # " + i);
             if (tfod != null) {
@@ -107,7 +107,7 @@ public class AD extends LinearOpMode {
         robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
         robot.moveRightToPosition(1, 4);                    //Un-hook
         robot.moveBackwardForTime(0.25, 350, false);        //Aligning against lander
-        robot.moveForwardForTime(1, 600, true);             //Move forward to Central Position
+        robot.moveForwardForTime(1, 300, true);             //Move forward to Central Position
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
         //End step 1
@@ -120,8 +120,9 @@ public class AD extends LinearOpMode {
         detect_result = detectOnceTime(robot);
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
-            robot.moveForwardForTime(0.5, 600, true);       //Knock off mineral
-            robot.moveBackwardForTime(0.5, 450, true);      //Move backward to Central Position
+            robot.moveForwardForTime(0.5, 550, true);       //Knock off mineral
+            robot.pause(100);
+            robot.moveBackwardForTime(0.5, 400, true);      //Move backward to Central Position
             robot.pause(100);
             robot.turnWithAngleClockwise(0.5, 90);          //Turn Right
         } else {//Move right 14.5 in.
@@ -133,7 +134,8 @@ public class AD extends LinearOpMode {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);   //Knock off mineral
-                robot.moveBackwardForTime(0.5, 400, true);  //Move back
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 375, true);  //Move back
                 robot.pause(100);
                 robot.turnWithAngleClockwise(0.5, 90);      //Turn Right 90 degress
                 robot.moveBackwardForTime(1, 600, true);    //Move back to Central Position
@@ -146,11 +148,12 @@ public class AD extends LinearOpMode {
                 robot.pause(100);
                 robot.moveLeftForTime(0.7, 750, true);      //Move further Left to look for Mineral at 3rd location
                 robot.moveForwardForTime(0.5, 550, true);   //Knock off mineral
-                robot.moveBackwardForTime(0.5, 400, true);  //Move back
+                robot.moveBackwardForTime(0.5, 350, true);  //Move back
                 robot.pause(100);
                 robot.turnWithAngleClockwise(0.5, 90);      //Turn Right 90 degress
                 robot.pause(100);
-                robot.moveForwardForTime(1, 600, true);     //Move forward to Central Position
+                robot.moveForwardForTime(.6, 600, true);     //Move forward to Central Position
+                robot.pause(100);
             }
         }
         time_taken = System.currentTimeMillis() - start_time;
