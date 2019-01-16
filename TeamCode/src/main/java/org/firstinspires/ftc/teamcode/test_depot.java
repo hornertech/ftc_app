@@ -128,8 +128,9 @@ public class test_depot extends LinearOpMode {
         if (detect_result == GOLD_MINERAL_FOUND) {
             Log.i(TAG, "Gold Mineral detected at Center: Knocking off");
             //Knock off mineral
-            robot.moveForwardForTime(0.5, 600, true);
-            robot.moveBackwardForTime(0.5, 450, true);
+            robot.moveForwardForTime(0.5, 550, true);
+            robot.pause(100);
+            robot.moveBackwardForTime(0.5, 400, true);
             robot.pause(100);
             // robot.turnForTime(-0.7, 875, false, 1);
             robot.turnWithAngleClockwise(0.5, 90);
@@ -143,10 +144,10 @@ public class test_depot extends LinearOpMode {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.moveBackwardForTime(0.5, 400, true);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 375, true);
                 robot.pause(100);
                 //Come back to center
-                ;
                 robot.turnWithAngleClockwise(0.5, 90);
                 robot.moveBackwardForTime(1, 600, true);
 
@@ -163,12 +164,14 @@ public class test_depot extends LinearOpMode {
                 robot.moveLeftForTime(0.7, 750, true);
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);
-                robot.moveBackwardForTime(0.5, 400, true);
+                robot.pause(100);
+                robot.moveBackwardForTime(0.5, 350, true);
                 robot.pause(100);
                 robot.turnWithAngleClockwise(0.5, 90);
                 // robot.turnForTime(-0.9, 800, false, 1);
                 robot.pause(100);
-                robot.moveForwardForTime(1, 600, true);
+                robot.moveForwardForTime(0.6, 600, true);
+                robot.pause(100);
                 //Come Back to Center
                 // robot.moveRightForTime(0.6, 950, true);
             }
@@ -194,14 +197,16 @@ public class test_depot extends LinearOpMode {
         robot.moveLeftForTime(0.3, 2200, false);
         robot.pause(100);
         robot.moveRightForTime(0.3, 500, true);
-        robot.moveForwardForTime(1, 700, true);
-        robot.grabberRotatorMoveTime(1, 2200);
-        robot.releaseMineral(20);
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
-        robot.moveBackwardForTime(1, 1000, true);
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
+        if (test) {
+            robot.moveForwardForTime(1, 700, true);
+            robot.grabberRotatorMoveTime(1, 2200);
+            robot.releaseMineral(20);
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+            robot.moveBackwardForTime(1, 1000, true);
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
+        }
 
 
         if (tfod != null) {
