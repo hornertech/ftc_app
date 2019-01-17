@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 @Autonomous
-public class AC extends LinearOpMode {
+public class Crater extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -103,8 +103,10 @@ public class AC extends LinearOpMode {
         }
         //Begin step 1 - Drop from lander
         Log.i(TAG, "STEP 1: Come Down and Unlatch");
-        robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
-        robot.moveRightToPosition(1, 4);                    //Un-hook
+        if (test) {
+            robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
+            robot.moveRightToPosition(1, 4);                    //Un-hook
+        }
         robot.moveBackwardForTime(0.25, 350, false);        //Aligning against lander
         robot.moveForwardForTime(1, 275, true);            //Move forward to Central position
         time_taken = System.currentTimeMillis() - start_time;
@@ -124,6 +126,33 @@ public class AC extends LinearOpMode {
             robot.moveBackwardForTime(0.5, 400, true);              //Move backward to Central Position
             robot.pause(100);
             robot.turnWithAngleAnticlockwise(0.5, 80);              //Turn Left
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
+            //End step 2
+
+            /*********************Begin step 3 **************************/
+
+            Log.i(TAG, "STEP 3: Drop Team Marker ");
+            robot.pause(100);
+            robot.moveForwardForTime(1, 1350, true);                //Moving back
+            robot.pause(100);
+            robot.turnWithAngleAnticlockwise(0.5, 45);              //Turn left side
+            robot.moveRightForTime(0.3, 2000, false);               //Wall Alignment
+            robot.pause(100);
+            robot.moveLeftForTime(0.3, 500, true);                  //Coming out after aligning
+            robot.moveForwardForTime(1, 800, true);                 //Move forward to go and drop teammarker
+            robot.grabberRotatorMoveTime(1, 2200);                  //Bring grabber down
+            robot.releaseMineral(20);                               //Drop Teammarker
+
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+
+
+            /*********************Begin step 4 **************************/
+            Log.i(TAG, "STEP 4: Park At Crater ");
+            robot.moveBackwardForTime(1, 1550, true);
+            time_taken = System.currentTimeMillis() - start_time;
+            Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
         } else {//Move right 14.5 in.
             Log.i(TAG, "Silver Mineral Detected at Center: Moving Right");
             robot.turnWithAngleClockwise(0.5, 8);
@@ -137,6 +166,33 @@ public class AC extends LinearOpMode {
                 robot.pause(100);
                 robot.turnWithAngleAnticlockwise(0.5, 90);         //Turn Left degress
                 robot.moveForwardForTime(1, 400, true);            //Move back to Central Position
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
+                //End step 2
+
+                /*********************Begin step 3 **************************/
+
+                Log.i(TAG, "STEP 3: Drop Team Marker ");
+                robot.pause(100);
+                robot.moveForwardForTime(1, 1350, true);                //Moving back
+                robot.pause(100);
+                robot.turnWithAngleAnticlockwise(0.5, 45);              //Turn left side
+                robot.moveRightForTime(0.3, 2000, false);               //Wall Alignment
+                robot.pause(100);
+                robot.moveLeftForTime(0.3, 500, true);                  //Coming out after aligning
+                robot.moveForwardForTime(1, 800, true);                 //Move forward to go and drop teammarker
+                robot.grabberRotatorMoveTime(1, 2200);                  //Bring grabber down
+                robot.releaseMineral(20);                               //Drop Teammarker
+
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+
+
+                /*********************Begin step 4 **************************/
+                Log.i(TAG, "STEP 4: Park At Crater ");
+                robot.moveBackwardForTime(1, 1550, true);
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
                 robot.turnWithAngleClockwise(0.5, 10);             //Slight turn Right to align
@@ -147,35 +203,36 @@ public class AC extends LinearOpMode {
                 robot.turnWithAngleAnticlockwise(0.5, 90);         //Turn Left 90 degress
                 robot.pause(100);
                 robot.moveBackwardForTime(.65, 500, true);         //Move backward to Central Position
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
+                //End step 2
+
+                /*********************Begin step 3 **************************/
+
+                Log.i(TAG, "STEP 3: Drop Team Marker ");
+                robot.pause(100);
+                robot.moveForwardForTime(1, 1350, true);                //Moving back
+                robot.pause(100);
+                robot.turnWithAngleAnticlockwise(0.5, 45);              //Turn left side
+                robot.moveRightForTime(0.3, 2000, false);               //Wall Alignment
+                robot.pause(100);
+                robot.moveLeftForTime(0.3, 500, true);                  //Coming out after aligning
+                robot.moveForwardForTime(1, 800, true);                 //Move forward to go and drop teammarker
+                robot.grabberRotatorMoveTime(1, 2200);                  //Bring grabber down
+                robot.releaseMineral(20);                               //Drop Teammarker
+
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
+
+
+                /*********************Begin step 4 **************************/
+                Log.i(TAG, "STEP 4: Park At Crater ");
+                robot.moveBackwardForTime(1, 1550, true);
+                time_taken = System.currentTimeMillis() - start_time;
+                Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
             }
         }
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 2: Completed after : " + time_taken + " Milli Seconds");
-        //End step 2
 
-        /*********************Begin step 3 **************************/
-
-        Log.i(TAG, "STEP 3: Drop Team Marker ");
-        robot.pause(100);
-        robot.moveForwardForTime(1, 1350, true);                //Moving back
-        robot.pause(100);
-        robot.turnWithAngleAnticlockwise(0.5, 45);              //Turn left side
-        robot.moveRightForTime(0.3, 2000, false);               //Wall Alignment
-        robot.pause(100);
-        robot.moveLeftForTime(0.3, 500, true);                  //Coming out after aligning
-        robot.moveForwardForTime(1, 800, true);                 //Move forward to go and drop teammarker
-        robot.grabberRotatorMoveTime(1, 2200);                  //Bring grabber down
-        robot.releaseMineral(20);                               //Drop Teammarker
-
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
-
-
-        /*********************Begin step 4 **************************/
-        Log.i(TAG, "STEP 4: Park At Crater ");
-        robot.moveBackwardForTime(1, 1550, true);
-        time_taken = System.currentTimeMillis() - start_time;
-        Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
 
         if (tfod != null) {
             tfod.shutdown();

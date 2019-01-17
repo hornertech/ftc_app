@@ -746,7 +746,7 @@ public class Robot extends java.lang.Thread {
         motor_1.setPower((-1) * power);
         motor_2.setPower(power);
         motor_3.setPower((-1) * power);
-        grabber_rotater.setPower(power);
+        grabber_rotater.setPower(1);
         try {
             sleep(time);
         } catch (Exception e) {
@@ -1081,7 +1081,7 @@ public class Robot extends java.lang.Thread {
     }
 
     public void grabMineral(int time) {
-        grabber_1.setPower(-0.5);
+        grabber_1.setPower(-0.25);
         try {
             sleep(time*100);
         } catch (Exception e) {
