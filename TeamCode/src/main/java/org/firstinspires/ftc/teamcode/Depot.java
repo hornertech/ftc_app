@@ -49,17 +49,25 @@ public class Depot extends LinearOpMode {
                 if (updatedRecognitions != null) {
                     Log.i(TAG, "Number of object detected : " + updatedRecognitions.size());
                     if (updatedRecognitions.size() == 1) {
-                        for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                Log.i(TAG, "Gold Mineral Found, Lets move it");
-                                telemetry.addData("Gold Mineral", "Detected!");
-                                telemetry.update();
-                                return GOLD_MINERAL_FOUND;
-                            } else {
-                                Log.i(TAG, "Silver Mineral Found, Move ON");
-                                telemetry.addData("Gold Mineral", "Not detected!");
-                                telemetry.update();
-                                return SILVER_MINERAL_FOUND;
+                        if (i == 0)
+                        {
+                            Log.i(TAG, "Mineral ditected in first try, let's try one more time");
+
+                        }
+                        else {
+                            for (Recognition recognition : updatedRecognitions) {
+
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    Log.i(TAG, "Gold Mineral Found, Lets move it");
+                                    telemetry.addData("Gold Mineral", "Detected!");
+                                    telemetry.update();
+                                    return GOLD_MINERAL_FOUND;
+                                } else {
+                                    Log.i(TAG, "Silver Mineral Found, Move ON");
+                                    telemetry.addData("Gold Mineral", "Not detected!");
+                                    telemetry.update();
+                                    return SILVER_MINERAL_FOUND;
+                                }
                             }
                         }
                     } else { //More than one object detected, lets move around a little
@@ -104,12 +112,12 @@ public class Depot extends LinearOpMode {
         }
         //Begin step 1  - Drop from lander
         Log.i(TAG, "STEP 1: Come Down and Unlatch");
-        if (test) {
-            robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
-            robot.moveRightToPosition(1, 4);                    //Un-hook
-        }
+
+        robot.unlatchUsingEncoderPosition(1, 1, 12);        //Unlatching
+        robot.moveRightToPosition(1, 4);                    //Un-hook
+
         robot.moveBackwardForTime(0.25, 350, false);        //Aligning against lander
-        robot.moveForwardForTime(1, 300, true);             //Move forward to Central Position
+        robot.moveForwardForTime(1, 350, true);             //Move forward to Central Position
         time_taken = System.currentTimeMillis() - start_time;
         Log.i(TAG, "STEP 1: Completed after : " + time_taken + " milli seconds");
         //End step 1
@@ -138,11 +146,11 @@ public class Depot extends LinearOpMode {
             robot.grabberSlideMoveTime(-1, 1000);               //Extend Slide little bit up
             robot.moveLeftForTime(0.3, 2200, false);            //Wall Alignment
             robot.pause(100);
-            robot.moveRightForTime(0.3, 500, true);             //Coming out after aligning
+            robot.moveRightForTime(0.6, 200, true);             //Coming out after aligning
             robot.moveForwardAndDropSlide(1, 700, true);             //Move forward to go and drop team marker
-            robot.turnWithAngleClockwise(0.5, 10);
+        //    robot.turnWithAngleClockwise(0.5, 10);
             robot.grabberRotatorMoveTime(1, 1500);              //Bring grabber down
-            robot.releaseMineral(10);                           //Drop Teammarker
+            robot.releaseMineral(8);                           //Drop Teammarker
             time_taken = System.currentTimeMillis() - start_time;
             Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
@@ -161,27 +169,28 @@ public class Depot extends LinearOpMode {
                 Log.i(TAG, "Gold Mineral detected at Right location: Knocking off");
                 //Knock off mineral
                 robot.moveForwardForTime(0.5, 550, true);   //Knock off mineral
-                robot.pause(100);
+                //robot.pause(100);
                 robot.moveBackwardForTime(0.5, 375, true);  //Move back
                 robot.pause(100);
                 robot.turnWithAngleClockwise(0.5, 90);      //Turn Right 90 degress
-                robot.moveBackwardForTime(1, 600, true);    //Move back to Central Position
-                robot.pause(100);
-                robot.moveBackwardForTime(1, 1100, true);
+               // robot.moveBackwardForTime(1, 600, true);    //Move back to Central Position
+               // robot.pause(100);
+                robot.moveBackwardAndExtendSlide(1, -0.5,1700, true);
                 /*********************Begin step 3 **************************/
 
                 Log.i(TAG, "STEP 3: Drop Team Marker ");
                 //Moving back
                 robot.pause(100);
-                robot.turnWithAngleAnticlockwise(0.5, 55);          //Turn left side
-                robot.grabberSlideMoveTime(-1, 1000);               //Extend Slide little bit up
+                robot.turnWithAngleAnticlockwise(1, 55);          //Turn left side
+                //robot.grabberSlideMoveTime(-1, 900);               //Extend Slide little bit up
                 robot.moveLeftForTime(0.3, 2200, false);            //Wall Alignment
-                robot.pause(100);
-                robot.moveRightForTime(0.3, 500, true);             //Coming out after aligning
+               // robot.pause(100);
+                robot.moveRightForTime(0.6, 200, true);             //Coming out after aligning
                 robot.moveForwardAndDropSlide(1, 700, true);             //Move forward to go and drop team marker
-                robot.turnWithAngleClockwise(0.5, 10);
-                robot.grabberRotatorMoveTime(1, 1500);              //Bring grabber down
-                robot.releaseMineral(10);                           //Drop Teammarker
+                robot.turnWithAngleAnticlockwise(1, 5);
+                robot.grabberRotatorMoveTime(1, 1200);              //Bring grabber down
+                robot.releaseMineral(8);                           //Drop Teammarker
+              //  robot.turnWithAngleClockwise(1, 5);
                 time_taken = System.currentTimeMillis() - start_time;
                 Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
 
@@ -193,17 +202,18 @@ public class Depot extends LinearOpMode {
             } else { // Knock of Leftmost Mineral
                 Log.i(TAG, "Silver Mineral Detected at Right Location : Knocking of Left Mineral");
                 //Move left 232 in.
-                robot.moveLeftForTime(0.7, 700, true);      //Move Left to look for Mineral at 3rd location
+                robot.moveLeftForTime(0.7, 750, true);      //Move Left to look for Mineral at 3rd location
                 robot.pause(100);
                 robot.turnWithAngleClockwise(0.5, 15);      //Turn right slighly to align
                 robot.pause(100);
                 robot.moveLeftForTime(0.7, 750, true);      //Move further Left to look for Mineral at 3rd location
-                robot.moveForwardAndDropSlide(0.35, 2100, true);   //Knock off mineral
+                robot.moveForwardAndDropSlide(0.3, 2300, true);   //Knock off mineral
+                robot.turnWithAngleClockwise(0.5, 15);
               //  robot.grabberRotatorMoveTime(1, 1000);
                 robot.releaseMineral(10);
                 robot.moveBackwardForTime(1, 100, true);
                 robot.pause(100);
-                robot.turnWithAngleClockwise(0.5, 30);
+                robot.turnWithAngleClockwise(0.5, 15);
                 robot.moveLeftForTime(0.3, 2200, false);            //Wall Alignment
                 robot.pause(100);
                 robot.moveRightForTime(0.3, 500, true);             //Coming out after aligning
@@ -211,39 +221,7 @@ public class Depot extends LinearOpMode {
                 time_taken = System.currentTimeMillis() - start_time;
                 Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
 
-                if (test) {
-                    robot.moveBackwardForTime(0.5, 350, true);  //Move back
-                    robot.pause(100);
-                    robot.turnWithAngleClockwise(0.5, 90);      //Turn Right 90 degress
-                    //   robot.pause(100);
-                    //   robot.moveForwardForTime(.6, 600, true);     //Move forward to Central Position
-                    //   robot.pause(100);
-                    robot.pause(100);
-                    robot.moveBackwardForTime(1, 500, true);
 
-                    /*********************Begin step 3 **************************/
-
-                    Log.i(TAG, "STEP 3: Drop Team Marker ");
-                    //Moving back
-                    robot.pause(100);
-                    robot.turnWithAngleAnticlockwise(0.5, 55);          //Turn left side
-                    robot.grabberSlideMoveTime(-1, 1000);               //Extend Slide little bit up
-                    robot.moveLeftForTime(0.3, 2200, false);            //Wall Alignment
-                    robot.pause(100);
-                    robot.moveRightForTime(0.3, 500, true);             //Coming out after aligning
-                    robot.moveForwardAndDropSlide(1, 700, true);             //Move forward to go and drop team marker
-                    robot.turnWithAngleClockwise(0.5, 10);
-                    robot.grabberRotatorMoveTime(1, 1500);              //Bring grabber down
-                    robot.releaseMineral(10);                           //Drop Teammarker
-                    time_taken = System.currentTimeMillis() - start_time;
-                    Log.i(TAG, "STEP 3: Completed after : " + time_taken + " Milli Seconds");
-
-                    /*********************Begin step 4 **************************/
-                    Log.i(TAG, "STEP 4: Park At Crater ");
-                    robot.moveBackwardForTime(1, 1000, true);
-                    time_taken = System.currentTimeMillis() - start_time;
-                    Log.i(TAG, "STEP 4: Completed after : " + time_taken + " Milli Seconds");
-                }
             }
         }
         time_taken = System.currentTimeMillis() - start_time;
