@@ -25,8 +25,7 @@ public class CraterNew extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
-
+    
     private static final int GOLD_MINERAL_FOUND = 0;
     private static final int SILVER_MINERAL_FOUND = 1;
     private static final int NO_MINERAL_FOUND = 2;
