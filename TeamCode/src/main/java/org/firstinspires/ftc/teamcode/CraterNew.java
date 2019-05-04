@@ -33,7 +33,7 @@ public class CraterNew extends LinearOpMode {
 
     public boolean debugOn = false;
     public boolean test = false;
-    public boolean sensortouch = true
+    public boolean sensortouch = true;
     public String TAG = "FTC_APP";
 
 
