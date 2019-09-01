@@ -81,7 +81,6 @@ public class SensorDistanceColor extends LinearOpMode {
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
-
     @Override
     public void runOpMode() {
 
