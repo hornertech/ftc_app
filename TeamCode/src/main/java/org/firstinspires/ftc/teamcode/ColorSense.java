@@ -56,9 +56,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class ColorSense extends LinearOpMode {
 
     ColorSensor colorSensor;    // Hardware Device Object
-
-
-    @Override
     public void runOpMode() {
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
